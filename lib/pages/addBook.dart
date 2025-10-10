@@ -79,7 +79,7 @@ class AddBook extends StatelessWidget {
                             "Sell Your Book",
                             style: GoogleFonts.unbounded(
                               fontSize: 16,
-                              color: blacks,
+                              color: pinks,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

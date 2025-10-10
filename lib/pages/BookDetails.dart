@@ -24,7 +24,7 @@ class BookDetails extends StatelessWidget {
         ? NetworkImage(book.coverUrl!)
         : FileImage(File(book.coverUrl!)) as ImageProvider<Object>;
 
-    Color clrs= lightPinks;
+    Color clrs= detailsGreen;
 
     return Scaffold(
       backgroundColor: backGroundClr,
@@ -170,7 +170,7 @@ class BookDetails extends StatelessWidget {
                     children: [
                       Container(
                         height: 30,
-                        width: 80,
+                        width: 88,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: greens, width: 2.2),
