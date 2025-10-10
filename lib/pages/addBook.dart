@@ -65,7 +65,7 @@ class AddBook extends StatelessWidget {
                           IconButton(
                             icon: const Icon(
                               Icons.arrow_back_sharp,
-                              size: 19,
+                              size: 22,
                               color: blacks,
                             ),
                             onPressed: () {
@@ -86,7 +86,7 @@ class AddBook extends StatelessWidget {
                           const Spacer(flex: 2),
                         ],
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 30),
                       InkWell(
                         onTap: isLoading
                             ? null
@@ -132,7 +132,7 @@ class AddBook extends StatelessWidget {
                               ? const Center(
                                   child: Icon(
                                     Icons.add_photo_alternate,
-                                    size: 38,
+                                    size: 32,
                                     color: blacks,
                                   ),
                                 )
@@ -144,7 +144,6 @@ class AddBook extends StatelessWidget {
 
                       Column(
                         children: [
-                          // PDF Upload Button
                           InkWell(
                             onTap: isLoading
                                 ? null

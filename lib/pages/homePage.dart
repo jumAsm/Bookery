@@ -79,7 +79,7 @@ class Homepage extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              'Categories',
+                              'Geners',
                               style: GoogleFonts.unbounded(
                                 fontSize: 14,
                                 color: blacks,

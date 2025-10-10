@@ -38,7 +38,7 @@ List<BookModel> initialBookData = [
   ),
   BookModel(
     id: "3",
-    title: "AThe Bell Jar",
+    title: "The Bell Jar",
     author: "Sylvia Plath",
     description:
         "The Bell Jar, was originally published in 1963 under the pseudonym Victoria Lucas. "

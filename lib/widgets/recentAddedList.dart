@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/books_cubit.dart';
-//import '../cubits/books_state.dart';
+import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
+import '../pages/BookDetails.dart';
 import 'BookItem.dart';
 
 class recentAddedList extends StatelessWidget {
@@ -30,13 +31,22 @@ class recentAddedList extends StatelessWidget {
               children: state.allBooks.map((book) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 12),
-                  child: BookItem(
-                    title: book.title ?? 'No Title',
-                    author: book.author ?? 'No Author',
-                    coverUrl:
-                        book.coverUrl ?? 'https://via.placeholder.com/140x180',
-                    price: '${book.price ?? 0},00 SR',
-                    language: book.language ?? 'English',
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookDetails(book: book),
+                        ),
+                      );
+                    },
+                    child: BookItem(
+                      title: book.title ?? 'No Title',
+                      author: book.author ?? 'No Author',
+                      coverUrl: book.coverUrl ?? 'https://via.placeholder.com/140x180',
+                      price: '${book.price ?? 0},00 SAR',
+                      language: book.language ?? 'English',
+                    ),
                   ),
                 );
               }).toList(),
