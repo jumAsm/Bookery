@@ -2,15 +2,17 @@ import 'package:bookery/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MultiLineTextField extends StatelessWidget {
+class TextFormFieldSet extends StatelessWidget {
   final String hintText;
   final IconData icon;
+  final bool isNumber;
   final void Function(String? value)? onSaved;
 
-  const MultiLineTextField({
+  const TextFormFieldSet({
     super.key,
     required this.hintText,
     required this.icon,
+    this.isNumber = false,
     this.onSaved,
   });
 
@@ -18,16 +20,15 @@ class MultiLineTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       onSaved: onSaved,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       style: GoogleFonts.onest(
         color: pinks,
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),
-      minLines: 1,
-      maxLines: null,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        fillColor: lightGreens,
+        fillColor: blacks,
         filled: false,
         hintText: hintText,
         hintStyle: GoogleFonts.onest(

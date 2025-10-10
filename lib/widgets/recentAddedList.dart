@@ -1,40 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubits/books_cubit.dart';
+//import '../cubits/books_state.dart';
+import '../models/BookModel.dart';
 import 'BookItem.dart';
 
 class recentAddedList extends StatelessWidget {
   const recentAddedList({super.key});
 
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: const [
-          BookItem(
-            title: 'No Longer Human',
-            author: 'Osamu Dazai',
-            coverUrl:
-            'https://i.pinimg.com/736x/d7/2b/21/d72b2135849f6a65a60a3afbe994551b.jpg',
-            price: '79,00 SAR',
-          ),
-          SizedBox(width: 12),
-          BookItem(
-            title: 'The Stranger',
-            author: 'Albert Camus',
-            coverUrl:
-            'https://i.pinimg.com/736x/89/46/6a/89466afd3864116d3c6c59b620b116ab.jpg',
-            price: '53,00 SAR',
-          ),
-          SizedBox(width: 12),
-          BookItem(
-            title: 'The Bell Jar',
-            author: 'Sylvia Plath',
-            coverUrl:
-            'https://i.pinimg.com/1200x/1b/ae/22/1bae226df7df268d2ccb699ef134a811.jpg',
-            price: '38,00 SAR',
-          ),
-        ],
-      ),
+    return BlocBuilder<BooksCubit, BooksState>(
+      builder: (context, state) {
+        if (state is BooksLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is BooksSuccess) {
+          if (state.allBooks.isEmpty) {
+            return const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Center(child: Text("No Recent Books Added")),
+            );
+          }
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: state.allBooks.map((book) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: BookItem(
+                    title: book.title ?? 'No Title',
+                    author: book.author ?? 'No Author',
+                    coverUrl:
+                        book.coverUrl ?? 'https://via.placeholder.com/140x180',
+                    price: '${book.price ?? 0},00 SR',
+                    language: book.language ?? 'English',
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        }
+
+        return const Center(child: Text("Error loading recently added books."));
+      },
     );
   }
 }

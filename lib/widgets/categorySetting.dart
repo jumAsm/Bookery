@@ -21,14 +21,11 @@ class Categorysetting extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 35,
+        height: 30,
         width: 100,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: borderClr,
-            width: 2.2,
-          ),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: borderClr, width: 2.2),
           color: selected ? borderClr : backGroundClr,
         ),
         child: Center(
@@ -36,8 +33,8 @@ class Categorysetting extends StatelessWidget {
             label,
             style: GoogleFonts.onest(
               color: selected ? backGroundClr : blacks,
-              fontSize: 17,
-              fontWeight:  FontWeight.w600,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),

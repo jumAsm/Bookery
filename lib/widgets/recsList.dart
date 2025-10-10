@@ -1,39 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubits/books_cubit.dart';
+//import '../cubits/books_state.dart';
+import '../models/BookModel.dart';
 
 class recsList extends StatelessWidget {
   const recsList({super.key});
 
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          recs(
-            title: 'عداء الطائرة الورقية',
-            author: 'خالد حسيني',
-            coverUrl:
-                'https://i.pinimg.com/736x/c8/24/3a/c8243a6cbde58d4c2aa0465e08e26c7a.jpg',
-            price: '60,00 SAR',
-          ),
-          SizedBox(height: 12),
-          recs(
-            title: 'The Laws of Human Nature',
-            author: 'Robert Greene',
-            coverUrl:
-                'https://i.pinimg.com/736x/1f/ed/83/1fed83beca4ae44a58361c0964b5021c.jpg',
-            price: '71,00 SAR',
-          ),
-          SizedBox(height: 12),
-          recs(
-            title: 'كافكا على الشاطئ',
-            author: 'هاروكي موراكامي',
-            coverUrl:
-                'https://i.pinimg.com/736x/32/30/47/32304772b1a4c68be65f05e71b95b9ce.jpg',
-            price: '51,00 SAR',
-          ),
-        ],
-      ),
+    return BlocBuilder<BooksCubit, BooksState>(
+      builder: (context, state) {
+        if (state is BooksLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is BooksSuccess) {
+          if (state.allBooks.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  "No recommended books available.",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: state.allBooks.map((book) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: recs(
+                    title: book.title ?? 'No Title',
+                    author: book.author ?? 'No Author',
+                    coverUrl:
+                        book.coverUrl ?? 'https://via.placeholder.com/64x86',
+                    price: '${book.price ?? 0},00 SAR',
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        }
+
+        return const Center(child: Text("Error loading recommended books."));
+      },
     );
   }
 }
@@ -45,6 +61,7 @@ class recs extends StatelessWidget {
   final String price;
 
   const recs({
+    super.key,
     required this.title,
     required this.author,
     required this.coverUrl,
@@ -82,21 +99,18 @@ class recs extends StatelessWidget {
                 Text(
                   author,
                   style: GoogleFonts.onest(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   price,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.green[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.green[600]),
                 ),
               ],
             ),
           ),
-
         ],
       ),
     );

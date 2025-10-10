@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "353865722063",
+    "project_id": "bookery-726b0",
+    "storage_bucket": "bookery-726b0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353865722063:android:8842be0cce0181a57f6fba",
+        "android_client_info": {
+          "package_name": "com.example.bookery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcR0XuQeYyBrffY4h2P-p4jqHdcLXRvSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

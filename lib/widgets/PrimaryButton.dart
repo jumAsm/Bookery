@@ -6,29 +6,25 @@ class PrimaryButton extends StatelessWidget {
   final String btnName;
   final Function ontap;
 
-  const PrimaryButton({
-    super.key,
-    required this.btnName,
-    required this.ontap,
-  });
+  const PrimaryButton({super.key, required this.btnName, required this.ontap});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => ontap(),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(pinks),
-        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical:2)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        )),
+        backgroundColor: MaterialStateProperty.all(blacks),
+        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 2)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       ),
       child: Text(
         btnName,
         style: GoogleFonts.unbounded(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: backGroundClr,
         ),
       ),
     );

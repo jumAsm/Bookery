@@ -1,11 +1,12 @@
 import  'package:flutter/material.dart';
 
-const Color backGroundClr = Color(0xFFFFFFFF);
-const Color oranges = Color(0xFFDDA459);
-const Color pinks = Color(0xFFCF868C);
-const Color greens = Color(0xFFBCC898);
-const Color blacks = Color(0xFF766A5D);
-const Color lightPinks = Color(0xFFF3DFDF);
+const Color backGroundClr = Color(0xFFF8F8F5);
+const Color blues = Color(0xFF283E78);
+const Color pinks = Color(0xFFA7214E);
+const Color yellows = Color(0xFFE3B854);
+const Color greens = Color(0xFF365536);
+const Color blacks = Color(0xFF574E44);
+const Color lightPinks = Color(0xFFC5708E);
 const Color darkGreens = Color(0xFF717C54);
 const Color lightIcons = Color(0xFFF2E9DF);
 const Color darkIcons = Color(0xFFE1D1C1);
