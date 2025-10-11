@@ -15,18 +15,25 @@ class BookDetails extends StatefulWidget {
 
 class _BookDetailsState extends State<BookDetails> {
   late BookModel _book;
-
+  bool _isBookmarked = false;
   @override
   void initState() {
     super.initState();
     _book = widget.book;
   }
+  void _toggleBookmarkStatus() {
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+    });
+  }
   void _toggleBasketStatus() {
     final bool currentStatus = _book.isInBasket ?? false;
     setState(() {
       _book.isInBasket = !currentStatus;
+
       _book.save();
     });
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -65,9 +72,13 @@ class _BookDetailsState extends State<BookDetails> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-            IconButton(
-            icon: Icon(Icons.bookmark_border, color: backGroundClr),
-            onPressed: _toggleBasketStatus,
+          IconButton(
+            icon: Icon(
+              _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+              color: backGroundClr,
+              size: 22,
+            ),
+            onPressed: _toggleBookmarkStatus,
           ),
           const SizedBox(width: 8),
         ],

@@ -78,7 +78,7 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Color> cardColors = [ pinks, yellows,blues, greens];
+    final List<Color> cardColors = [ yellows,blues, greens];
 
     return BlocBuilder<BooksCubit, BooksState>(
       builder: (context, state) {

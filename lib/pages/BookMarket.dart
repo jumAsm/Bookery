@@ -77,7 +77,7 @@ class BookMarket extends StatelessWidget {
                         'Book Market',
                         style: GoogleFonts.unbounded(
                           fontSize: 18,
-                          color: pinks,
+                          color: blacks,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

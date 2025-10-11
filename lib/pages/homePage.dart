@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/categorySetting.dart';
 import '../widgets/recentAddedList.dart';
 import '../widgets/recsList.dart';
+import 'BasketPage.dart';
 import 'addBook.dart';
 import '../cubits/books_cubit.dart';
 import 'BookMarket.dart';
@@ -57,7 +58,17 @@ class Homepage extends StatelessWidget {
                               ),
                             ),
                             const Spacer(),
-                            Icon(basketIcon, color: basketColor),
+                            IconButton(
+                              icon: Icon(basketIcon, color: basketColor),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const BasketPage(),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                         const SizedBox(height: 8),

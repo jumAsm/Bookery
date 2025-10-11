@@ -38,9 +38,8 @@ class BooksCubit extends Cubit<BooksState> {
       BookModel B0 = originalOrder[0];
       BookModel B1 = originalOrder[1];
       BookModel B2 = originalOrder[2];
-      BookModel B3 = originalOrder[3];
 
-      return [B1, B2, B3, B0];
+      return [B1, B2, B0];
     }
 
     return originalOrder;
