@@ -304,7 +304,7 @@ class _BookDetailsState extends State<BookDetails> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: inBasket ? greens : pinks,
+                    backgroundColor: inBasket ? blues : pinks,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

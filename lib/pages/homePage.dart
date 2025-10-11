@@ -7,6 +7,7 @@ import '../widgets/recentAddedList.dart';
 import '../widgets/recsList.dart';
 import 'addBook.dart';
 import '../cubits/books_cubit.dart';
+import 'BookMarket.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -88,24 +89,16 @@ class Homepage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Text(
-                              'Geners',
-                              style: GoogleFonts.unbounded(
-                                fontSize: 14,
-                                color: blacks,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Spacer(),
-                            Icon(
-                              Icons.keyboard_arrow_right,
-                              size: 20,
-                              color: blacks,
-                            ),
-                          ],
+
+                        Text(
+                          'Geners',
+                          style: GoogleFonts.unbounded(
+                            fontSize: 14,
+                            color: blacks,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
+
                         const SizedBox(height: 4),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -114,33 +107,29 @@ class Homepage extends StatelessWidget {
                               Categorysetting(
                                 label: 'Fiction',
                                 borderClr: pinks,
-                                selected: selectedCategory == 'Fiction',
-                                onTap: () =>
-                                    booksCubit.selectCategory('Fiction'),
+                                selected: false,
+                                onTap: () {},
                               ),
                               const SizedBox(width: 8),
                               Categorysetting(
-                                label: 'History',
+                                label: 'Literature',
                                 borderClr: blues,
-                                selected: selectedCategory == 'History',
-                                onTap: () =>
-                                    booksCubit.selectCategory('History'),
+                                selected: false,
+                                onTap: () {},
                               ),
                               const SizedBox(width: 8),
                               Categorysetting(
                                 label: 'Psychology',
                                 borderClr: yellows,
-                                selected: selectedCategory == 'Psychology',
-                                onTap: () =>
-                                    booksCubit.selectCategory('Psychology'),
+                                selected: false,
+                                onTap: () {},
                               ),
                               const SizedBox(width: 8),
                               Categorysetting(
                                 label: 'Business',
                                 borderClr: greens,
-                                selected: selectedCategory == 'Business',
-                                onTap: () =>
-                                    booksCubit.selectCategory('Business'),
+                                selected: false,
+                                onTap: () {},
                               ),
                             ],
                           ),
@@ -151,23 +140,34 @@ class Homepage extends StatelessWidget {
                   const SizedBox(height: 2),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Text(
-                          'New on the Market',
-                          style: GoogleFonts.unbounded(
-                            fontSize: 14,
-                            color: blacks,
-                            fontWeight: FontWeight.w600,
+                    child: InkWell(
+                      onTap: () {
+                        booksCubit.selectCategory('All');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BookMarket(),
                           ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          Icons.keyboard_arrow_right,
-                          size: 20,
-                          color: blacks,
-                        ),
-                      ],
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            'New on the Market',
+                            style: GoogleFonts.unbounded(
+                              fontSize: 14,
+                              color: blacks,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const Spacer(),
+                          Icon(
+                            Icons.keyboard_arrow_right,
+                            size: 20,
+                            color: blacks,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 4),

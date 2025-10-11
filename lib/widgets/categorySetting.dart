@@ -22,7 +22,7 @@ class Categorysetting extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 30,
-        width: 100,
+        width: 90,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: borderClr, width: 2.2),
@@ -33,8 +33,8 @@ class Categorysetting extends StatelessWidget {
             label,
             style: GoogleFonts.onest(
               color: selected ? backGroundClr : blacks,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),

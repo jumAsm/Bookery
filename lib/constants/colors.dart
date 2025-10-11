@@ -14,7 +14,7 @@ const Color lightGreens = Color(0xFFEFF2DF);
 
 import  'package:flutter/material.dart';
 
-const Color backGroundClr = Color(0xFFF8F6F2);
+const Color backGroundClr = Color(0xFFF1EEEA);
 const Color blues = Color(0xFF3A3F61);
 const Color pinks = Color(0xFF93284C);
 const Color yellows = Color(0xFFE6B2BA);
