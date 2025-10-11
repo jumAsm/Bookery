@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../models/BookModel.dart';
 part 'add_book_state.dart';
+
 const String kBookBox = 'books_for_sale_box';
 
 class AddBookCubit extends Cubit<AddBookState> {
@@ -45,15 +46,6 @@ class AddBookCubit extends Cubit<AddBookState> {
   }
 
   void saveBook() async {
-    if (title == null || coverUrl == null || bookUrl == null || price == null) {
-      emit(
-        AddBookFailure(
-          "Please ensure all fields are selected and files are selected.",
-        ),
-      );
-      return;
-    }
-
     BookModel newBook = BookModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,

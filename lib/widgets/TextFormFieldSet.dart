@@ -7,6 +7,7 @@ class TextFormFieldSet extends StatelessWidget {
   final IconData icon;
   final bool isNumber;
   final void Function(String? value)? onSaved;
+  final String? Function(String? value)? validator;
 
   const TextFormFieldSet({
     super.key,
@@ -14,12 +15,14 @@ class TextFormFieldSet extends StatelessWidget {
     required this.icon,
     this.isNumber = false,
     this.onSaved,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       onSaved: onSaved,
+      validator: validator,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       style: GoogleFonts.onest(
         color: pinks,
