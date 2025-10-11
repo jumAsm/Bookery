@@ -79,7 +79,7 @@ class BookMarket extends StatelessWidget {
                     ],
                   ),
                 ),
-
+                const SizedBox(height: 8),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(
@@ -100,11 +100,12 @@ class BookMarket extends StatelessWidget {
                           selected: selectedCategory == category,
                           onTap: () => booksCubit.selectCategory(category),
                         ),
+
                       );
                     }).toList(),
                   ),
                 ),
-
+                const SizedBox(height: 8),
                 Expanded(
                   child: (state is BooksSuccess && displayedBooks.isEmpty)
                       ? Center(
@@ -126,23 +127,26 @@ class BookMarket extends StatelessWidget {
                           ),
                         )
                       : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: GridView.builder(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 0.58,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                ),
-                            itemCount: displayedBooks.length,
-                            itemBuilder: (context, index) {
-                              final book = displayedBooks[index];
-                              return bookItemMarket(book: book);
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: GridView.builder(
+                      padding: const EdgeInsets.only(bottom: 70),
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 0.58,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: displayedBooks.length,
+                      itemBuilder: (context, index) {
+                        final book = displayedBooks[index];
+                        return bookItemMarket(book: book);
                             },
                           ),
+
                         ),
                 ),
+
               ],
             ),
           ),
