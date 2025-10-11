@@ -6,6 +6,7 @@ import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
 import '../widgets/bookItemMarket.dart';
 import '../widgets/categorySetting.dart';
+import 'BasketPage.dart';
 
 class BookMarket extends StatelessWidget {
   const BookMarket({super.key});
@@ -50,6 +51,17 @@ class BookMarket extends StatelessWidget {
                 .toList();
           }
         }
+        bool isBasketNotEmpty = false;
+        if (state is BooksSuccess) {
+          isBasketNotEmpty = state.allBooks.any(
+            (book) => book.isInBasket == true,
+          );
+        }
+        final IconData basketIcon = isBasketNotEmpty
+            ? Icons.shopping_bag_rounded
+            : Icons.shopping_bag_outlined;
+
+        final Color basketColor = isBasketNotEmpty ? pinks : blacks;
 
         final selectedCategory = booksCubit.currentCategory;
 
@@ -75,7 +87,18 @@ class BookMarket extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Spacer(flex: 2),
+                      const Spacer(flex: 1),
+                      IconButton(
+                        icon: Icon(basketIcon, color: basketColor),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BasketPage(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -100,7 +123,6 @@ class BookMarket extends StatelessWidget {
                           selected: selectedCategory == category,
                           onTap: () => booksCubit.selectCategory(category),
                         ),
-
                       );
                     }).toList(),
                   ),
@@ -127,26 +149,24 @@ class BookMarket extends StatelessWidget {
                           ),
                         )
                       : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: GridView.builder(
-                      padding: const EdgeInsets.only(bottom: 70),
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.58,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemCount: displayedBooks.length,
-                      itemBuilder: (context, index) {
-                        final book = displayedBooks[index];
-                        return bookItemMarket(book: book);
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: GridView.builder(
+                            padding: const EdgeInsets.only(bottom: 70),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 0.58,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                ),
+                            itemCount: displayedBooks.length,
+                            itemBuilder: (context, index) {
+                              final book = displayedBooks[index];
+                              return bookItemMarket(book: book);
                             },
                           ),
-
                         ),
                 ),
-
               ],
             ),
           ),

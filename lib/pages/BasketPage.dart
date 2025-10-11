@@ -46,7 +46,7 @@ class BasketPage extends StatelessWidget {
               ),
               centerTitle: true,
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: blacks, size: 22),
+                icon: const Icon(Icons.keyboard_arrow_left, color: blacks, size: 22),
                 onPressed: () => Navigator.pop(context),
               ),
             ),

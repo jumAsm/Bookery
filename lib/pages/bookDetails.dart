@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
 import 'package:bookery/constants/colors.dart';
 
@@ -32,9 +34,10 @@ class _BookDetailsState extends State<BookDetails> {
     final bool currentStatus = _book.isInBasket ?? false;
     setState(() {
       _book.isInBasket = !currentStatus;
-
       _book.save();
     });
+
+    BlocProvider.of<BooksCubit>(context).fetchAllBooks();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -72,7 +75,11 @@ class _BookDetailsState extends State<BookDetails> {
         backgroundColor: blues,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.keyboard_arrow_left, color: backGroundClr, size: 22),
+          icon: const Icon(
+            Icons.keyboard_arrow_left,
+            color: backGroundClr,
+            size: 22,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
