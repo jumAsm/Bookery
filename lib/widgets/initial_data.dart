@@ -17,6 +17,7 @@ List<BookModel> initialBookData = [
     pages: 624,
     price: 71,
     aboutAuthor: "The #1 New York Times-bestselling author",
+    isInBasket: false,
   ),
   BookModel(
     id: "2",
@@ -35,6 +36,7 @@ List<BookModel> initialBookData = [
     pages: 543,
     price: 60,
     aboutAuthor: "null",
+    isInBasket: false,
   ),
   BookModel(
     id: "3",
@@ -53,6 +55,7 @@ List<BookModel> initialBookData = [
     pages: 294,
     price: 47,
     aboutAuthor: "he Bell Jar, Sylvia Plath's only novel.",
+    isInBasket: false,
   ),
   BookModel(
     id: "4",
@@ -69,6 +72,7 @@ List<BookModel> initialBookData = [
     pages: 615,
     price: 51,
     aboutAuthor: "روائي ياباني شهير.",
+    isInBasket: false,
   ),
   BookModel(
     id: "5",
@@ -87,5 +91,6 @@ List<BookModel> initialBookData = [
     pages: 271,
     price: 49,
     aboutAuthor: "null",
+    isInBasket: false,
   ),
 ];

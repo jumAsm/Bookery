@@ -56,7 +56,7 @@ class AddBook extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 55),
+                  const SizedBox(height: 45),
                   Column(
                     children: [
                       Row(
@@ -91,14 +91,14 @@ class AddBook extends StatelessWidget {
                         onTap: isLoading
                             ? null
                             : () async {
-                                final picker = ImagePicker();
-                                final XFile? image = await picker.pickImage(
-                                  source: ImageSource.gallery,
-                                );
-                                if (image != null) {
-                                  addBookCubit.coverUrl = image.path;
-                                }
-                              },
+                          final picker = ImagePicker();
+                          final XFile? image = await picker.pickImage(
+                            source: ImageSource.gallery,
+                          );
+                          if (image != null) {
+                            addBookCubit.coverUrl = image.path;
+                          }
+                        },
                         child: Container(
                           height: 190,
                           width: 140,
@@ -115,27 +115,27 @@ class AddBook extends StatelessWidget {
                             ],
                             color: backGroundClr,
                             image:
-                                addBookCubit.coverUrl != null &&
-                                    addBookCubit.coverUrl!.isNotEmpty
+                            addBookCubit.coverUrl != null &&
+                                addBookCubit.coverUrl!.isNotEmpty
                                 ? DecorationImage(
-                                    image: FileImage(
-                                      File(addBookCubit.coverUrl!),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
+                              image: FileImage(
+                                File(addBookCubit.coverUrl!),
+                              ),
+                              fit: BoxFit.cover,
+                            )
                                 : null,
                           ),
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator())
                               : addBookCubit.coverUrl == null ||
-                                    addBookCubit.coverUrl!.isEmpty
+                              addBookCubit.coverUrl!.isEmpty
                               ? const Center(
-                                  child: Icon(
-                                    Icons.add_photo_alternate,
-                                    size: 32,
-                                    color: blacks,
-                                  ),
-                                )
+                            child: Icon(
+                              Icons.add_photo_alternate,
+                              size: 32,
+                              color: blacks,
+                            ),
+                          )
                               : null,
                         ),
                       ),
@@ -148,16 +148,16 @@ class AddBook extends StatelessWidget {
                             onTap: isLoading
                                 ? null
                                 : () async {
-                                    final result = await FilePicker.platform
-                                        .pickFiles(
-                                          type: FileType.custom,
-                                          allowedExtensions: ['pdf'],
-                                        );
-                                    if (result != null) {
-                                      addBookCubit.bookUrl =
-                                          result.files.single.path;
-                                    }
-                                  },
+                              final result = await FilePicker.platform
+                                  .pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: ['pdf'],
+                              );
+                              if (result != null) {
+                                addBookCubit.bookUrl =
+                                    result.files.single.path;
+                              }
+                            },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 10,
@@ -305,7 +305,8 @@ class AddBook extends StatelessWidget {
                           isExpanded: true,
                           items: categoryData
                               .map(
-                                (e) => DropdownMenuItem<String>(
+                                (e) =>
+                                DropdownMenuItem<String>(
                                   value: e["key"],
                                   child: Text(
                                     e["label"]!,
@@ -316,7 +317,7 @@ class AddBook extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              )
+                          )
                               .toList(),
                           onChanged: (value) {
                             addBookCubit.category = value;
@@ -350,7 +351,8 @@ class AddBook extends StatelessWidget {
                           onSaved: (value) => addBookCubit.language = value,
                           items: languageData
                               .map(
-                                (e) => DropdownMenuItem<String>(
+                                (e) =>
+                                DropdownMenuItem<String>(
                                   value: e["label"],
                                   child: Text(
                                     e["label"]!,
@@ -361,7 +363,7 @@ class AddBook extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              )
+                          )
                               .toList(),
                           onChanged: (value) {
                             addBookCubit.language = value;
@@ -386,11 +388,11 @@ class AddBook extends StatelessWidget {
                     ontap: isLoading
                         ? () {}
                         : () {
-                            if (formKey.currentState!.validate()) {
-                              formKey.currentState!.save();
-                              addBookCubit.saveBook();
-                            }
-                          },
+                      if (formKey.currentState!.validate()) {
+                        formKey.currentState!.save();
+                        addBookCubit.saveBook();
+                      }
+                    },
                   ),
                 ),
               ],

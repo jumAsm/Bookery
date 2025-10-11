@@ -79,7 +79,7 @@ class BookItem extends StatelessWidget {
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 11,
-                            color: greens,
+                            color: priceGr,
                             fontWeight: FontWeight.w500,
                           ),
                         ),

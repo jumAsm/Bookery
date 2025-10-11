@@ -19,6 +19,18 @@ class Homepage extends StatelessWidget {
       builder: (context, state) {
         final String selectedCategory = booksCubit.currentCategory;
 
+        bool isBasketNotEmpty = false;
+        if (state is BooksSuccess) {
+          isBasketNotEmpty = state.allBooks.any(
+            (book) => book.isInBasket == true,
+          );
+        }
+        final IconData basketIcon = isBasketNotEmpty
+            ? Icons.shopping_bag_rounded
+            : Icons.shopping_bag_outlined;
+
+        final Color basketColor = isBasketNotEmpty ? pinks : blacks;
+
         return Scaffold(
           backgroundColor: backGroundClr,
           body: SafeArea(
@@ -44,7 +56,7 @@ class Homepage extends StatelessWidget {
                               ),
                             ),
                             const Spacer(),
-                            Icon(Icons.shopping_bag_outlined, color: blacks),
+                            Icon(basketIcon, color: basketColor),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -166,7 +178,7 @@ class Homepage extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          'Recommended for You',
+                          'Recommended',
                           style: GoogleFonts.unbounded(
                             fontSize: 14,
                             color: blacks,
@@ -183,7 +195,8 @@ class Homepage extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 2),
+                  StackedRecommendations(),
                 ],
               ),
             ),

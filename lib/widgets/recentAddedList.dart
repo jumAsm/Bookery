@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/books_cubit.dart';
 import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
-import '../pages/BookDetails.dart';
+import '../pages/bookDetails.dart';
 import 'BookItem.dart';
 
 class recentAddedList extends StatelessWidget {

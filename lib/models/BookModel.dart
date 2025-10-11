@@ -29,7 +29,8 @@ class BookModel extends HiveObject {
   int? pages;
   @HiveField(12)
   int? price;
-
+  @HiveField(13)
+  bool? isInBasket;
   BookModel({
     this.id,
     this.title,
@@ -44,5 +45,7 @@ class BookModel extends HiveObject {
     this.createdAt,
     this.pages,
     this.price,
+    this.isInBasket = false,
+
   });
 }

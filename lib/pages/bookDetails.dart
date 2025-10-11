@@ -4,41 +4,70 @@ import 'dart:io';
 import '../models/BookModel.dart';
 import 'package:bookery/constants/colors.dart';
 
-class BookDetails extends StatelessWidget {
+class BookDetails extends StatefulWidget {
   final BookModel book;
 
   const BookDetails({super.key, required this.book});
 
   @override
+  State<BookDetails> createState() => _BookDetailsState();
+}
+
+class _BookDetailsState extends State<BookDetails> {
+  late BookModel _book;
+
+  @override
+  void initState() {
+    super.initState();
+    _book = widget.book;
+  }
+  void _toggleBasketStatus() {
+    final bool currentStatus = _book.isInBasket ?? false;
+    setState(() {
+      _book.isInBasket = !currentStatus;
+      _book.save();
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          (_book.isInBasket ?? false) ? 'Book added to basket!' : 'Book removed from basket!',
+          style: GoogleFonts.onest(),
+        ),
+        duration: const Duration(milliseconds: 1000),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final bool isArabic = book.language == 'Arabic';
+    final bool isArabic = _book.language == 'Arabic';
     final CrossAxisAlignment horizontalAlignment = isArabic
         ? CrossAxisAlignment.end
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-        book.coverUrl != null &&
-            (book.coverUrl!.startsWith('http') ||
-                book.coverUrl!.startsWith('https'))
-        ? NetworkImage(book.coverUrl!)
-        : FileImage(File(book.coverUrl!)) as ImageProvider<Object>;
+    _book.coverUrl != null &&
+        (_book.coverUrl!.startsWith('http') ||
+            _book.coverUrl!.startsWith('https'))
+        ? NetworkImage(_book.coverUrl!)
+        : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
-    Color clrs= detailsGreen;
+   final bool inBasket = _book.isInBasket ?? false;
 
     return Scaffold(
       backgroundColor: backGroundClr,
       appBar: AppBar(
-        backgroundColor: clrs,
+        backgroundColor: blues,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: backGroundClr, size: 22),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.bookmark_border, color: backGroundClr),
-            onPressed: () {},
+            IconButton(
+            icon: Icon(Icons.bookmark_border, color: backGroundClr),
+            onPressed: _toggleBasketStatus,
           ),
           const SizedBox(width: 8),
         ],
@@ -56,8 +85,8 @@ class BookDetails extends StatelessWidget {
                   width: screenSize.width,
                   height: screenSize.height * 0.44,
                   decoration: BoxDecoration(
-                    color: clrs,
-                    borderRadius: BorderRadius.only(
+                    color: blues,
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(70),
                       bottomRight: Radius.circular(70),
                     ),
@@ -96,10 +125,10 @@ class BookDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    book.title ?? 'No Title',
+                    _book.title ?? 'No Title',
                     style: GoogleFonts.unbounded(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
                       color: blacks,
                     ),
                     textAlign: TextAlign.center,
@@ -108,7 +137,7 @@ class BookDetails extends StatelessWidget {
                   const SizedBox(height: 2),
 
                   Text(
-                    'By ${book.author ?? 'No Author'}',
+                    'By ${_book.author ?? 'No Author'}',
                     style: GoogleFonts.onest(
                       fontSize: 14,
                       color: blacks.withOpacity(0.7),
@@ -117,18 +146,18 @@ class BookDetails extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(5, (index) {
                       return Icon(
                         index <
-                                (double.tryParse(book.rating ?? '0.0') ?? 0)
-                                    .round()
+                            (double.tryParse(_book.rating ?? '0.0') ?? 0)
+                                .round()
                             ? Icons.star
                             : Icons.star_border,
-                        color: yellows,
+                        color: stars,
                         size: 20,
                       );
                     }),
@@ -154,7 +183,7 @@ class BookDetails extends StatelessWidget {
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: Text(
-                      book.description ??
+                      _book.description ??
                           'No description available for this book.',
                       style: GoogleFonts.onest(fontSize: 14, color: blacks),
                       textAlign: horizontalAlignment == CrossAxisAlignment.end
@@ -177,7 +206,7 @@ class BookDetails extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            book.category ?? 'General',
+                            _book.category ?? 'General',
                             style: GoogleFonts.onest(
                               color: blacks,
                               fontSize: 12,
@@ -195,7 +224,7 @@ class BookDetails extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            book.language ?? 'English',
+                            _book.language ?? 'English',
                             style: GoogleFonts.onest(
                               color: blacks,
                               fontSize: 12,
@@ -214,7 +243,7 @@ class BookDetails extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            '${book.pages ?? 0} Pages',
+                            '${_book.pages ?? 0} Pages',
                             style: GoogleFonts.onest(
                               color: blacks,
                               fontSize: 12,
@@ -234,15 +263,15 @@ class BookDetails extends StatelessWidget {
 
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(left: 25,right: 25, bottom: 15,top: 5),
-        decoration: BoxDecoration(color: backGroundClr),
+        decoration: const BoxDecoration(color: backGroundClr),
         child: Row(
           children: [
             Text(
-              '${book.price ?? 0},00 SAR',
+              '${_book.price ?? 0},00 SAR',
               style: GoogleFonts.unbounded(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: greens,
+                color: priceGr,
               ),
             ),
             const Spacer(),
@@ -260,10 +289,14 @@ class BookDetails extends StatelessWidget {
               child: SizedBox(
                 height: 45,
                 child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add, color: backGroundClr, size: 18),
+                  onPressed: _toggleBasketStatus,
+                  icon: Icon(
+                    inBasket ? Icons.check : Icons.add,
+                    color: backGroundClr,
+                    size: 18,
+                  ),
                   label: Text(
-                    'Add to Basket',
+                    inBasket ? 'In Basket' : 'Add to Basket',
                     style: GoogleFonts.unbounded(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -271,7 +304,7 @@ class BookDetails extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: pinks,
+                    backgroundColor: inBasket ? greens : pinks,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
