@@ -16,14 +16,13 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       description: fields[2] as String?,
       rating: fields[3] as String?,
       author: fields[4] as String?,
-      aboutAuthor: fields[5] as String?,
-      coverUrl: fields[6] as String?,
-      bookurl: fields[7] as String?,
-      category: fields[8] as String?,
-      language: fields[9] as String?,
-      createdAt: fields[10] as String?,
-      pages: fields[11] as int?,
-      price: fields[12] as int?,
+      coverUrl: fields[5] as String?,
+      bookurl: fields[6] as String?,
+      category: fields[7] as String?,
+      language: fields[8] as String?,
+      createdAt: fields[9] as String?,
+      pages: fields[10] as int?,
+      price: fields[11] as int?,
     );
   }
 
@@ -42,20 +41,18 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       ..writeByte(4)
       ..write(obj.author)
       ..writeByte(5)
-      ..write(obj.aboutAuthor)
-      ..writeByte(6)
       ..write(obj.coverUrl)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.bookurl)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.category)
-      ..writeByte(9)
+      ..writeByte(8)
       ..write(obj.language)
-      ..writeByte(10)
+      ..writeByte(9)
       ..write(obj.createdAt)
-      ..writeByte(11)
+      ..writeByte(10)
       ..write(obj.pages)
-      ..writeByte(12)
+      ..writeByte(11)
       ..write(obj.price);
   }
 

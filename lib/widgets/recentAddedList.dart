@@ -41,7 +41,9 @@ class recentAddedList extends StatelessWidget {
                     child: BookItem(
                       title: book.title ?? 'No Title',
                       author: book.author ?? 'No Author',
-                      coverUrl: book.coverUrl ?? 'https://via.placeholder.com/140x180',
+                      coverUrl:
+                          book.coverUrl ??
+                          'https://via.placeholder.com/140x180',
                       price: '${book.price ?? 0},00 SAR',
                       language: book.language ?? 'English',
                     ),

@@ -16,7 +16,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 624,
     price: 71,
-    aboutAuthor: "The #1 New York Times-bestselling author",
     isInBasket: false,
   ),
 
@@ -35,7 +34,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 543,
     price: 60,
-    aboutAuthor: "null",
     isInBasket: false,
   ),
 
@@ -54,8 +52,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 200,
     price: 55,
-    aboutAuthor:
-        "Viktor E. Frankl was an Austrian neurologist, psychiatrist, and Holocaust survivor who founded logotherapy.",
     isInBasket: false,
   ),
 
@@ -74,7 +70,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 615,
     price: 51,
-    aboutAuthor: "روائي ياباني شهير.",
     isInBasket: false,
   ),
 
@@ -93,8 +88,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 254,
     price: 52,
-    aboutAuthor:
-        "Oscar Wilde was an Irish poet and playwright known for his wit and exploration of aestheticism.",
     isInBasket: false,
   ),
   BookModel(
@@ -112,7 +105,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 265,
     price: 79,
-    aboutAuthor: "null",
     isInBasket: false,
   ),
   BookModel(
@@ -131,7 +123,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 271,
     price: 49,
-    aboutAuthor: "null",
     isInBasket: false,
   ),
 
@@ -150,8 +141,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 110,
     price: 40,
-    aboutAuthor:
-        "كاتب فلسطيني بارز، وأحد أهم مؤسسي الأدب المقاوم في العالم العربي.",
     isInBasket: false,
   ),
   BookModel(
@@ -169,7 +158,6 @@ List<BookModel> initialBookData = [
     createdAt: DateTime.now().toString(),
     pages: 294,
     price: 47,
-    aboutAuthor: "he Bell Jar, Sylvia Plath's only novel.",
     isInBasket: false,
   ),
 ];

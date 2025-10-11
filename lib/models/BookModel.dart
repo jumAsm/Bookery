@@ -14,22 +14,20 @@ class BookModel extends HiveObject {
   @HiveField(4)
   String? author;
   @HiveField(5)
-  String? aboutAuthor;
-  @HiveField(6)
   String? coverUrl;
-  @HiveField(7)
+  @HiveField(6)
   String? bookurl;
-  @HiveField(8)
+  @HiveField(7)
   String? category;
-  @HiveField(9)
+  @HiveField(8)
   String? language;
-  @HiveField(10)
+  @HiveField(9)
   String? createdAt;
-  @HiveField(11)
+  @HiveField(10)
   int? pages;
-  @HiveField(12)
+  @HiveField(11)
   int? price;
-  @HiveField(13)
+  @HiveField(12)
   bool? isInBasket;
 
   BookModel({
@@ -38,7 +36,6 @@ class BookModel extends HiveObject {
     this.description,
     this.rating,
     this.author,
-    this.aboutAuthor,
     this.coverUrl,
     this.bookurl,
     this.category,
