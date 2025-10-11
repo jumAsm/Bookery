@@ -21,11 +21,13 @@ class _BookDetailsState extends State<BookDetails> {
     super.initState();
     _book = widget.book;
   }
+
   void _toggleBookmarkStatus() {
     setState(() {
       _isBookmarked = !_isBookmarked;
     });
   }
+
   void _toggleBasketStatus() {
     final bool currentStatus = _book.isInBasket ?? false;
     setState(() {
@@ -37,7 +39,9 @@ class _BookDetailsState extends State<BookDetails> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          (_book.isInBasket ?? false) ? 'Book added to basket!' : 'Book removed from basket!',
+          (_book.isInBasket ?? false)
+              ? 'Book added to basket!'
+              : 'Book removed from basket!',
           style: GoogleFonts.onest(),
         ),
         duration: const Duration(milliseconds: 1000),
@@ -54,13 +58,13 @@ class _BookDetailsState extends State<BookDetails> {
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-    _book.coverUrl != null &&
-        (_book.coverUrl!.startsWith('http') ||
-            _book.coverUrl!.startsWith('https'))
+        _book.coverUrl != null &&
+            (_book.coverUrl!.startsWith('http') ||
+                _book.coverUrl!.startsWith('https'))
         ? NetworkImage(_book.coverUrl!)
         : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
-   final bool inBasket = _book.isInBasket ?? false;
+    final bool inBasket = _book.isInBasket ?? false;
 
     return Scaffold(
       backgroundColor: backGroundClr,
@@ -68,7 +72,7 @@ class _BookDetailsState extends State<BookDetails> {
         backgroundColor: blues,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: backGroundClr, size: 22),
+          icon: const Icon(Icons.keyboard_arrow_left, color: backGroundClr, size: 22),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -164,8 +168,8 @@ class _BookDetailsState extends State<BookDetails> {
                     children: List.generate(5, (index) {
                       return Icon(
                         index <
-                            (double.tryParse(_book.rating ?? '0.0') ?? 0)
-                                .round()
+                                (double.tryParse(_book.rating ?? '0.0') ?? 0)
+                                    .round()
                             ? Icons.star
                             : Icons.star_border,
                         color: stars,
@@ -273,7 +277,7 @@ class _BookDetailsState extends State<BookDetails> {
       ),
 
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(left: 25,right: 25, bottom: 15,top: 5),
+        padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15, top: 5),
         decoration: const BoxDecoration(color: backGroundClr),
         child: Row(
           children: [
@@ -291,7 +295,7 @@ class _BookDetailsState extends State<BookDetails> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    spreadRadius:2,
+                    spreadRadius: 2,
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),

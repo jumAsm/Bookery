@@ -18,8 +18,10 @@ class BookMarket extends StatelessWidget {
       'Fiction',
       'Literature',
       'Psychology',
-      'Business',
-      'Literature',
+      'Art',
+      'Poetry',
+      'Biography',
+      'History',
     ];
     final List<Color> categoryColors = [
       blacks,
@@ -64,15 +66,7 @@ class BookMarket extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_sharp,
-                          size: 22,
-                          color: blacks,
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      const Spacer(flex: 1),
+                      const Spacer(flex: 2),
                       Text(
                         'Book Market',
                         style: GoogleFonts.unbounded(

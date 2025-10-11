@@ -13,7 +13,7 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () => ontap(),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(blacks),
+        backgroundColor: MaterialStateProperty.all(blues),
         padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 2)),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

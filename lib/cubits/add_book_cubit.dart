@@ -2,11 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
 import '../../models/BookModel.dart';
-
 part 'add_book_state.dart';
-
 const String kBookBox = 'books_for_sale_box';
 
 class AddBookCubit extends Cubit<AddBookState> {
@@ -15,6 +12,16 @@ class AddBookCubit extends Cubit<AddBookState> {
   String? title, author, description, aboutAuthor, rating, language, category;
   String? coverUrl, bookUrl, price;
   String? pages;
+
+  void updateCoverUrl(String? path) {
+    coverUrl = path;
+    emit(AddBookInitial());
+  }
+
+  void updateBookUrl(String? path) {
+    bookUrl = path;
+    emit(AddBookInitial());
+  }
 
   void pickImage() async {
     final picker = ImagePicker();
@@ -37,10 +44,13 @@ class AddBookCubit extends Cubit<AddBookState> {
     }
   }
 
-
   void saveBook() async {
     if (title == null || coverUrl == null || bookUrl == null || price == null) {
-      emit(AddBookFailure("Please ensure all fields are selected and files are selected."));
+      emit(
+        AddBookFailure(
+          "Please ensure all fields are selected and files are selected.",
+        ),
+      );
       return;
     }
 
@@ -67,11 +77,10 @@ class AddBookCubit extends Cubit<AddBookState> {
 
       clearForm();
       emit(AddBookSuccess());
-    } catch(e) {
+    } catch (e) {
       emit(AddBookFailure(e.toString()));
     }
   }
-
 
   void clearForm() {
     title = null;

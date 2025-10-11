@@ -18,9 +18,9 @@ class bookItemMarket extends StatelessWidget {
         : CrossAxisAlignment.start;
     final textAlignment = isArabic ? TextAlign.right : TextAlign.left;
     final ImageProvider<Object> imageProvider =
-    book.coverUrl != null &&
-        (book.coverUrl!.startsWith('http') ||
-            book.coverUrl!.startsWith('https'))
+        book.coverUrl != null &&
+            (book.coverUrl!.startsWith('http') ||
+                book.coverUrl!.startsWith('https'))
         ? NetworkImage(book.coverUrl!)
         : FileImage(File(book.coverUrl!)) as ImageProvider<Object>;
 

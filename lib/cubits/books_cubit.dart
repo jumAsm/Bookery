@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../models/BookModel.dart';
-// import 'dart:math'; // لم نعد بحاجة لها الآن
-
 part 'books_state.dart';
-
 const String kBookBox = 'books_for_sale_box';
 
 class BooksCubit extends Cubit<BooksState> {
@@ -30,7 +27,6 @@ class BooksCubit extends Cubit<BooksState> {
       return [];
     }
     List<BookModel> allBooks = (state as BooksSuccess).allBooks;
-
 
     List<BookModel> originalOrder = allBooks.take(4).toList();
 

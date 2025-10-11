@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import '../widgets/TextFormFieldSet.dart';
 import '../widgets/PrimaryButton.dart';
 import '../widgets/multiLineTextField.dart';
 import '../cubits/add_book_cubit.dart';
@@ -22,10 +21,13 @@ class AddBook extends StatelessWidget {
     addBookCubit.clearForm();
 
     List<Map<String, String>> categoryData = [
-      {"key": "Literature", "label": "Literature"},
-      {"key": "History", "label": "History"},
       {"key": "Fiction", "label": "Fiction"},
-      {"key": "Business", "label": "Business"},
+      {"key": "Literature", "label": "Literature"},
+      {"key": "Psychology", "label": "Psychology"},
+      {"key": "Art", "label": "Art"},
+      {"key": "Poetry", "label": "Poetry"},
+      {"key": "Biography", "label": "Biography"},
+      {"key": "History", "label": "History"},
     ];
     List<Map<String, String>> languageData = [
       {"key": "English", "label": "English"},
@@ -64,7 +66,7 @@ class AddBook extends StatelessWidget {
                         children: [
                           IconButton(
                             icon: const Icon(
-                              Icons.arrow_back_sharp,
+                              Icons.keyboard_arrow_left,
                               size: 22,
                               color: blacks,
                             ),
@@ -91,19 +93,19 @@ class AddBook extends StatelessWidget {
                         onTap: isLoading
                             ? null
                             : () async {
-                          final picker = ImagePicker();
-                          final XFile? image = await picker.pickImage(
-                            source: ImageSource.gallery,
-                          );
-                          if (image != null) {
-                            addBookCubit.coverUrl = image.path;
-                          }
-                        },
+                                final picker = ImagePicker();
+                                final XFile? image = await picker.pickImage(
+                                  source: ImageSource.gallery,
+                                );
+                                if (image != null) {
+                                  addBookCubit.updateCoverUrl(image.path);
+                                }
+                              },
                         child: Container(
                           height: 190,
                           width: 140,
                           decoration: BoxDecoration(
-                            border: Border.all(color: blacks, width: 2.2),
+                            border: Border.all(color: blacks, width: 1.5),
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
@@ -115,27 +117,27 @@ class AddBook extends StatelessWidget {
                             ],
                             color: backGroundClr,
                             image:
-                            addBookCubit.coverUrl != null &&
-                                addBookCubit.coverUrl!.isNotEmpty
+                                addBookCubit.coverUrl != null &&
+                                    addBookCubit.coverUrl!.isNotEmpty
                                 ? DecorationImage(
-                              image: FileImage(
-                                File(addBookCubit.coverUrl!),
-                              ),
-                              fit: BoxFit.cover,
-                            )
+                                    image: FileImage(
+                                      File(addBookCubit.coverUrl!),
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
                                 : null,
                           ),
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator())
                               : addBookCubit.coverUrl == null ||
-                              addBookCubit.coverUrl!.isEmpty
+                                    addBookCubit.coverUrl!.isEmpty
                               ? const Center(
-                            child: Icon(
-                              Icons.add_photo_alternate,
-                              size: 32,
-                              color: blacks,
-                            ),
-                          )
+                                  child: Icon(
+                                    Icons.add_photo_alternate,
+                                    size: 32,
+                                    color: blues,
+                                  ),
+                                )
                               : null,
                         ),
                       ),
@@ -148,16 +150,17 @@ class AddBook extends StatelessWidget {
                             onTap: isLoading
                                 ? null
                                 : () async {
-                              final result = await FilePicker.platform
-                                  .pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: ['pdf'],
-                              );
-                              if (result != null) {
-                                addBookCubit.bookUrl =
-                                    result.files.single.path;
-                              }
-                            },
+                                    final result = await FilePicker.platform
+                                        .pickFiles(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['pdf'],
+                                        );
+                                    if (result != null) {
+                                      addBookCubit.updateBookUrl(
+                                        result.files.single.path,
+                                      );
+                                    }
+                                  },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                 vertical: 10,
@@ -165,7 +168,7 @@ class AddBook extends StatelessWidget {
                               ),
                               width: 160,
                               decoration: BoxDecoration(
-                                color: blacks,
+                                color: blues,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
@@ -175,7 +178,7 @@ class AddBook extends StatelessWidget {
                                     addBookCubit.bookUrl != null
                                         ? Icons.check
                                         : Icons.file_upload_outlined,
-                                    size: 18,
+                                    size: 16,
                                     color: backGroundClr,
                                   ),
                                   const SizedBox(width: 5),
@@ -186,7 +189,7 @@ class AddBook extends StatelessWidget {
                                     style: GoogleFonts.onest(
                                       fontSize: 12,
                                       color: backGroundClr,
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ],
@@ -199,11 +202,11 @@ class AddBook extends StatelessWidget {
                             visible: addBookCubit.bookUrl != null,
                             child: InkWell(
                               onTap: () {
-                                addBookCubit.bookUrl = null;
+                                addBookCubit.updateBookUrl(null);
                               },
                               child: Icon(
                                 Icons.delete_forever_outlined,
-                                size: 28,
+                                size: 24,
                                 color: pinks,
                               ),
                             ),
@@ -305,8 +308,7 @@ class AddBook extends StatelessWidget {
                           isExpanded: true,
                           items: categoryData
                               .map(
-                                (e) =>
-                                DropdownMenuItem<String>(
+                                (e) => DropdownMenuItem<String>(
                                   value: e["key"],
                                   child: Text(
                                     e["label"]!,
@@ -317,7 +319,7 @@ class AddBook extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                          )
+                              )
                               .toList(),
                           onChanged: (value) {
                             addBookCubit.category = value;
@@ -351,8 +353,7 @@ class AddBook extends StatelessWidget {
                           onSaved: (value) => addBookCubit.language = value,
                           items: languageData
                               .map(
-                                (e) =>
-                                DropdownMenuItem<String>(
+                                (e) => DropdownMenuItem<String>(
                                   value: e["label"],
                                   child: Text(
                                     e["label"]!,
@@ -363,7 +364,7 @@ class AddBook extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                          )
+                              )
                               .toList(),
                           onChanged: (value) {
                             addBookCubit.language = value;
@@ -388,11 +389,11 @@ class AddBook extends StatelessWidget {
                     ontap: isLoading
                         ? () {}
                         : () {
-                      if (formKey.currentState!.validate()) {
-                        formKey.currentState!.save();
-                        addBookCubit.saveBook();
-                      }
-                    },
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              addBookCubit.saveBook();
+                            }
+                          },
                   ),
                 ),
               ],

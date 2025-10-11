@@ -25,10 +25,7 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
       children: [
         Text(
           'By ${book.author ?? 'No Author'}',
-          style: GoogleFonts.onest(
-            fontSize: 12,
-            color: textColor,
-          ),
+          style: GoogleFonts.onest(fontSize: 12, color: textColor),
         ),
         const SizedBox(height: 4),
         Text(
@@ -75,10 +72,9 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final List<Color> cardColors = [ yellows,blues, greens];
+    final List<Color> cardColors = [blues, yellows, greens];
 
     return BlocBuilder<BooksCubit, BooksState>(
       builder: (context, state) {
@@ -95,15 +91,11 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
           displayBooks.addAll(state.allBooks.take(4));
         }
 
-
         if (displayBooks.isEmpty) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text(
-                "No books",
-                textAlign: TextAlign.center,
-              ),
+              child: Text("No books", textAlign: TextAlign.center),
             ),
           );
         }
@@ -119,7 +111,7 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
             .toList();
         if (_tappedIndex != null) {
           final entryToMove = orderedEntries.firstWhere(
-                (entry) => entry.key == _tappedIndex,
+            (entry) => entry.key == _tappedIndex,
           );
 
           orderedEntries.removeWhere((entry) => entry.key == _tappedIndex);
@@ -139,10 +131,13 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                   final double scaleFactor = isTapped ? 1.05 : 1.0;
                   final Color cardColor = cardColors[index % cardColors.length];
 
-                  final Color textColor = cardColor == yellows ? blacks : backGroundClr;
+                  final Color textColor = cardColor == yellows
+                      ? blacks
+                      : backGroundClr;
 
-                  final FontWeight titleFontWeight =
-                  book.language == 'Arabic' ? FontWeight.w800 : FontWeight.w500;
+                  final FontWeight titleFontWeight = book.language == 'Arabic'
+                      ? FontWeight.w800
+                      : FontWeight.w500;
 
                   final double topPosition =
                       (totalCards - 1 - index) * overlapHeight;
@@ -179,7 +174,10 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                             });
                           },
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 10,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -198,42 +196,59 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                                   opacity: isTapped ? 1.0 : 0.0,
                                   duration: const Duration(milliseconds: 300),
                                   child: isTapped
-                                      ? Expanded(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: Container(
-                                            width: 65,
-                                            height: 90,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: _getImageProvider(book.coverUrl),
-                                                fit: BoxFit.cover,
+                                      ? SizedBox(
+                                          height: 90,
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: Container(
+                                                  width: 65,
+                                                  height: 90,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: _getImageProvider(
+                                                        book.coverUrl,
+                                                      ),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  child:
+                                                      book.coverUrl == null ||
+                                                          book.coverUrl!.isEmpty
+                                                      ? Center(
+                                                          child: Icon(
+                                                            Icons.book,
+                                                            color: textColor,
+                                                          ),
+                                                        )
+                                                      : null,
+                                                ),
                                               ),
-                                            ),
-                                            child: book.coverUrl == null || book.coverUrl!.isEmpty
-                                                ? Center(child: Icon(Icons.book, color: textColor))
-                                                : null,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: _buildDetailsColumn(book, textColor),
-                                        ),
+                                              const SizedBox(width: 12),
+                                              Expanded(
+                                                child: _buildDetailsColumn(
+                                                  book,
+                                                  textColor,
+                                                ),
+                                              ),
 
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 70),
-                                          child: Icon(
-                                            Icons.more_horiz_outlined,
-                                            color: textColor,
-                                            size: 18,
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: 70,
+                                                ),
+                                                child: Icon(
+                                                  Icons.more_horiz_outlined,
+                                                  color: textColor,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                        )
                                       : const SizedBox.shrink(),
                                 ),
                               ],

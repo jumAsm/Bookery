@@ -1,5 +1,3 @@
-// lib/widgets/BasketItem.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,13 +27,10 @@ class BasketItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isArabic = book.language == 'Arabic';
-
-
     final ImageProvider<Object> imageProvider =
-    book.coverUrl != null &&
-        (book.coverUrl!.startsWith('http') ||
-            book.coverUrl!.startsWith('https'))
+        book.coverUrl != null &&
+            (book.coverUrl!.startsWith('http') ||
+                book.coverUrl!.startsWith('https'))
         ? NetworkImage(book.coverUrl!)
         : FileImage(File(book.coverUrl!)) as ImageProvider<Object>;
 
@@ -88,7 +83,11 @@ class BasketItem extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () => _removeFromBasket(context),
-                      child: Icon(Icons.delete_outline_rounded, size: 18, color: blacks),
+                      child: Icon(
+                        Icons.delete_outline_rounded,
+                        size: 18,
+                        color: blacks,
+                      ),
                     ),
                   ],
                 ),
@@ -106,11 +105,12 @@ class BasketItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-
                     Row(
                       children: List.generate(5, (index) {
                         return Icon(
-                          index < (double.tryParse(book.rating ?? '0.0') ?? 0).round()
+                          index <
+                                  (double.tryParse(book.rating ?? '0.0') ?? 0)
+                                      .round()
                               ? Icons.star
                               : Icons.star_border,
                           color: stars,
@@ -118,7 +118,6 @@ class BasketItem extends StatelessWidget {
                         );
                       }),
                     ),
-
                     Text(
                       '${book.price ?? 0},00 SR',
                       textAlign: TextAlign.left,
