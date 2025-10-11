@@ -22,24 +22,6 @@ class BooksCubit extends Cubit<BooksState> {
     }
   }
 
-  List<BookModel> getRecommendedBooks() {
-    if (state is! BooksSuccess) {
-      return [];
-    }
-    List<BookModel> allBooks = (state as BooksSuccess).allBooks;
-
-    List<BookModel> originalOrder = allBooks.take(4).toList();
-
-    if (originalOrder.length >= 4) {
-      BookModel B0 = originalOrder[0];
-      BookModel B1 = originalOrder[1];
-      BookModel B2 = originalOrder[2];
-
-      return [B1, B2, B0];
-    }
-
-    return originalOrder;
-  }
 
   void selectCategory(String category) {
     currentCategory = category;
