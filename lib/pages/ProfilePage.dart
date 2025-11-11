@@ -24,7 +24,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildProfileBookCard(BuildContext context, BookModel book, {bool showPrice = true}) {
     const double cardWidth = 108;
-    const double coverHeight = 153;
+    const double coverHeight = 160;
 
     final bool isArabic = book.language == 'Arabic';
     final crossAlignment = isArabic
@@ -36,10 +36,10 @@ class ProfilePage extends StatelessWidget {
       book.coverUrl,
     );
 
-    final String priceText = showPrice ? '${book.price ?? 0},00 SAR' : '';
+    final String priceText = showPrice ? '${book.price ?? 0},00 SR' : '';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -108,7 +108,7 @@ class ProfilePage extends StatelessWidget {
         bool showPriceInCards = true,
         bool isOwnedSection = false,
       }) {
-    const double newListViewHeight = 205;
+    const double newListViewHeight = 212;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +164,7 @@ class ProfilePage extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => BookDetails(
                             book: book,
-                            isOwned: isOwnedSection, // 🔥 تمرير قيمة isOwned الصحيحة
+                            isOwned: isOwnedSection,
                           ),
                         ),
                       );

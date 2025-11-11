@@ -35,26 +35,28 @@ class BookMarket extends StatelessWidget {
 
     return BlocBuilder<BooksCubit, BooksState>(
       builder: (context, state) {
-        if (state is BooksLoading) {
-          return const Scaffold(
-            backgroundColor: backGroundClr,
-            body: Center(child: CircularProgressIndicator()),
-          );
+        List<BookModel> marketBooks = [];
+        if (state is BooksSuccess) {
+          marketBooks = state.allBooks
+              .where((book) => book.isOwned == false)
+              .toList();
         }
+
         List<BookModel> displayedBooks = [];
         if (state is BooksSuccess) {
           if (booksCubit.currentCategory == 'All') {
-            displayedBooks = state.allBooks;
+            displayedBooks = marketBooks;
           } else {
-            displayedBooks = state.allBooks
+            displayedBooks = marketBooks
                 .where((book) => book.category == booksCubit.currentCategory)
                 .toList();
           }
         }
+
         bool isBasketNotEmpty = false;
         if (state is BooksSuccess) {
           isBasketNotEmpty = state.allBooks.any(
-            (book) => book.isInBasket == true,
+                (book) => book.isInBasket == true,
           );
         }
         final IconData basketIcon = isBasketNotEmpty
@@ -114,7 +116,7 @@ class BookMarket extends StatelessWidget {
                       final index = entry.key;
                       final category = entry.value;
                       final Color borderClr =
-                          categoryColors[index % categoryColors.length];
+                      categoryColors[index % categoryColors.length];
                       return Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: Categorysetting(
@@ -131,41 +133,41 @@ class BookMarket extends StatelessWidget {
                 Expanded(
                   child: (state is BooksSuccess && displayedBooks.isEmpty)
                       ? Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(50.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "No books found in this category.",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.onest(
-                                    fontSize: 14,
-                                    color: blacks,
-                                  ),
-                                ),
-                              ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(50.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "No books found in this category.",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.onest(
+                              fontSize: 14,
+                              color: blacks,
                             ),
                           ),
-                        )
+                        ],
+                      ),
+                    ),
+                  )
                       : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: GridView.builder(
-                            padding: const EdgeInsets.only(bottom: 70),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 0.58,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                ),
-                            itemCount: displayedBooks.length,
-                            itemBuilder: (context, index) {
-                              final book = displayedBooks[index];
-                              return bookItemMarket(book: book);
-                            },
-                          ),
-                        ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: GridView.builder(
+                      padding: const EdgeInsets.only(bottom: 70),
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 0.53,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: displayedBooks.length,
+                      itemBuilder: (context, index) {
+                        final book = displayedBooks[index];
+                        return bookItemMarket(book: book);
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),

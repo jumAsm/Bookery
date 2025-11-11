@@ -18,9 +18,9 @@ class bookItemMarket extends StatelessWidget {
         : CrossAxisAlignment.start;
     final textAlignment = isArabic ? TextAlign.right : TextAlign.left;
     final ImageProvider<Object> imageProvider =
-        book.coverUrl != null &&
-            (book.coverUrl!.startsWith('http') ||
-                book.coverUrl!.startsWith('https'))
+    book.coverUrl != null &&
+        (book.coverUrl!.startsWith('http') ||
+            book.coverUrl!.startsWith('https'))
         ? NetworkImage(book.coverUrl!)
         : FileImage(File(book.coverUrl!)) as ImageProvider<Object>;
 
@@ -32,7 +32,7 @@ class bookItemMarket extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -47,6 +47,7 @@ class bookItemMarket extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: crossAlignment,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: 150,
@@ -56,7 +57,8 @@ class bookItemMarket extends StatelessWidget {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
-            const SizedBox(height: 3),
+
+            const SizedBox(height: 2),
             Text(
               book.title ?? 'No Title',
               maxLines: 1,
@@ -68,12 +70,12 @@ class bookItemMarket extends StatelessWidget {
                 color: blacks,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 textAlign: TextAlign.left,
-                '${book.price ?? 0},00 SAR',
+                '${book.price ?? 0},00 SR',
                 style: GoogleFonts.onest(
                   fontSize: 9,
                   color: priceGr,
@@ -81,6 +83,7 @@ class bookItemMarket extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 4),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/books_cubit.dart';
+import '../models/BookModel.dart';
 import '../pages/bookDetails.dart';
 import 'BookItem.dart';
 
@@ -16,7 +17,11 @@ class recentAddedList extends StatelessWidget {
         }
 
         if (state is BooksSuccess) {
-          if (state.allBooks.isEmpty) {
+          final List<BookModel> marketBooks = state.allBooks
+              .where((book) => book.isOwned == false)
+              .toList();
+
+          if (marketBooks.isEmpty) {
             return const Padding(
               padding: EdgeInsets.all(16.0),
               child: Center(child: Text("No Recent Books Added")),
@@ -26,7 +31,7 @@ class recentAddedList extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
-              children: state.allBooks.map((book) {
+              children: marketBooks.map((book) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: InkWell(
@@ -39,7 +44,7 @@ class recentAddedList extends StatelessWidget {
                       );
                     },
                     child: BookItem(
-                       book: book,
+                      book: book,
                     ),
                   ),
                 );

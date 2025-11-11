@@ -100,7 +100,7 @@ class BasketPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${totalPrice},00 SAR',
+                        '${totalPrice},00 SR',
                         style: GoogleFonts.unbounded(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -129,11 +129,12 @@ class BasketPage extends StatelessWidget {
                             duration: const Duration(milliseconds: 500),
                           ),
                         ).closed.then((reason) {
-                          Navigator.pushReplacement(
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const ProfilePage(),
                             ),
+                                (Route<dynamic> route) => route.isFirst,
                           );
                         });
                       },

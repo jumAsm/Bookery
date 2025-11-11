@@ -63,7 +63,7 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
         ),
         const SizedBox(height: 4),
         Text(
-          '${book.price ?? 0},00 SAR',
+          '${book.price ?? 0},00 SR',
           style: GoogleFonts.onest(
             fontSize: 11,
             fontWeight: FontWeight.w400,

@@ -30,7 +30,7 @@ class BookItem extends StatelessWidget {
     final ImageProvider<Object> imageProvider = _getImageProvider(book.coverUrl);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -44,7 +44,7 @@ class BookItem extends StatelessWidget {
               children: [
                 Container(
                   width: 120,
-                  height: 170,
+                  height: 180,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image:

@@ -72,7 +72,6 @@ class _BookDetailsState extends State<BookDetails> {
     final bool currentStatus = _book.isInBasket ?? false;
 
     if (currentStatus) {
-      // 🔥 المنطق الجديد: إذا كان في السلة بالفعل، انتقل إلى صفحة السلة
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const BasketPage()),
@@ -97,6 +96,32 @@ class _BookDetailsState extends State<BookDetails> {
     }
   }
 
+  void _readBook() {
+    if (_book.bookurl != null && _book.bookurl!.isNotEmpty) {
+
+      print('Attempting to open PDF at: ${_book.bookurl}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Opening: "${_book.title}"...',
+            style: GoogleFonts.onest(),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Cannot read: Book file not found.',
+            style: GoogleFonts.onest(),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -106,13 +131,33 @@ class _BookDetailsState extends State<BookDetails> {
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-        _book.coverUrl != null &&
-            (_book.coverUrl!.startsWith('http') ||
-                _book.coverUrl!.startsWith('https'))
+    _book.coverUrl != null &&
+        (_book.coverUrl!.startsWith('http') ||
+            _book.coverUrl!.startsWith('https'))
         ? NetworkImage(_book.coverUrl!)
         : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
     final bool inBasket = _book.isInBasket ?? false;
+    final bool isOwned = widget.isOwned;
+
+    String buttonText;
+    IconData buttonIcon;
+    Color buttonColor;
+    VoidCallback onPressedAction;
+    bool showPrice = true;
+
+    if (isOwned) {
+      buttonText = 'Read Now';
+      buttonIcon = Icons.menu_book_rounded;
+      buttonColor = blues;
+      onPressedAction = _readBook;
+      showPrice = false;
+    } else {
+      buttonText = inBasket ? 'In Basket' : 'Add to Basket';
+      buttonIcon = inBasket ? Icons.check : Icons.add;
+      buttonColor = inBasket ? blues : pinks;
+      onPressedAction = _toggleBasketStatus;
+    }
 
     return Scaffold(
       backgroundColor: backGroundClr,
@@ -128,6 +173,7 @@ class _BookDetailsState extends State<BookDetails> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
+          // **تطبيق الشرط المطلوب بدقة:** يظهر زر التفضيل فقط إذا كان الكتاب مملوكًا (isOwned == true)
           if (widget.isOwned)
             IconButton(
               icon: Icon(
@@ -139,6 +185,7 @@ class _BookDetailsState extends State<BookDetails> {
               ),
               onPressed: _toggleFavoriteStatus,
             ),
+
           IconButton(
             icon: Icon(
               (_book.isBookmarked ?? false)
@@ -233,8 +280,8 @@ class _BookDetailsState extends State<BookDetails> {
                     children: List.generate(5, (index) {
                       return Icon(
                         index <
-                                (double.tryParse(_book.rating ?? '0.0') ?? 0)
-                                    .round()
+                            (double.tryParse(_book.rating ?? '0.0') ?? 0)
+                                .round()
                             ? Icons.star
                             : Icons.star_border,
                         color: stars,
@@ -346,14 +393,15 @@ class _BookDetailsState extends State<BookDetails> {
         decoration: const BoxDecoration(color: backGroundClr),
         child: Row(
           children: [
-            Text(
-              '${_book.price ?? 0},00 SR',
-              style: GoogleFonts.unbounded(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: priceGr,
+            if (showPrice)
+              Text(
+                '${_book.price ?? 0},00 SR',
+                style: GoogleFonts.unbounded(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: priceGr,
+                ),
               ),
-            ),
             const Spacer(),
             Container(
               decoration: BoxDecoration(
@@ -369,14 +417,14 @@ class _BookDetailsState extends State<BookDetails> {
               child: SizedBox(
                 height: 45,
                 child: ElevatedButton.icon(
-                  onPressed: _toggleBasketStatus,
+                  onPressed: onPressedAction,
                   icon: Icon(
-                    inBasket ? Icons.check : Icons.add,
+                    buttonIcon,
                     color: backGroundClr,
                     size: 18,
                   ),
                   label: Text(
-                    inBasket ? 'In Basket' : 'Add to Basket',
+                    buttonText,
                     style: GoogleFonts.unbounded(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -384,7 +432,7 @@ class _BookDetailsState extends State<BookDetails> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: inBasket ? blues : pinks,
+                    backgroundColor: buttonColor,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
