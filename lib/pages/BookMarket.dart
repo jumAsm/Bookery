@@ -81,10 +81,10 @@ class BookMarket extends StatelessWidget {
                       const Spacer(flex: 2),
                       Text(
                         'Book Market',
-                        style: GoogleFonts.unbounded(
-                          fontSize: 18,
+                        style: GoogleFonts.redRose(
+                          fontSize: 22,
                           color: blacks,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       const Spacer(flex: 1),

@@ -29,6 +29,16 @@ class BookModel extends HiveObject {
   int? price;
   @HiveField(12)
   bool? isInBasket;
+  @HiveField(13)
+  bool? isBookmarked;
+  @HiveField(14)
+  bool? isOwned;
+  @HiveField(15)
+  bool? isOnSale;
+  @HiveField(16)
+  String? note;
+  @HiveField(17)
+  bool? isFavorite;
 
   BookModel({
     this.id,
@@ -44,5 +54,10 @@ class BookModel extends HiveObject {
     this.pages,
     this.price,
     this.isInBasket = false,
+    this.isBookmarked = false,
+    this.isOwned = false,
+    this.isOnSale = false,
+    this.note,
+    this.isFavorite = false,
   });
 }

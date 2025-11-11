@@ -17,7 +17,7 @@ class BookDetails extends StatefulWidget {
 
 class _BookDetailsState extends State<BookDetails> {
   late BookModel _book;
-  bool _isBookmarked = false;
+
   @override
   void initState() {
     super.initState();
@@ -26,8 +26,23 @@ class _BookDetailsState extends State<BookDetails> {
 
   void _toggleBookmarkStatus() {
     setState(() {
-      _isBookmarked = !_isBookmarked;
+      _book.isBookmarked = !(_book.isBookmarked ?? false);
+      _book.save();
     });
+
+    BlocProvider.of<BooksCubit>(context).fetchAllBooks();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          (_book.isBookmarked ?? false)
+              ? 'Book added to bookmarks!'
+              : 'Book removed from bookmarks!',
+          style: GoogleFonts.onest(),
+        ),
+        duration: const Duration(milliseconds: 1000),
+      ),
+    );
   }
 
   void _toggleBasketStatus() {
@@ -61,9 +76,9 @@ class _BookDetailsState extends State<BookDetails> {
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-        _book.coverUrl != null &&
-            (_book.coverUrl!.startsWith('http') ||
-                _book.coverUrl!.startsWith('https'))
+    _book.coverUrl != null &&
+        (_book.coverUrl!.startsWith('http') ||
+            _book.coverUrl!.startsWith('https'))
         ? NetworkImage(_book.coverUrl!)
         : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
@@ -85,7 +100,7 @@ class _BookDetailsState extends State<BookDetails> {
         actions: [
           IconButton(
             icon: Icon(
-              _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+              (_book.isBookmarked ?? false) ? Icons.bookmark : Icons.bookmark_border,
               color: backGroundClr,
               size: 22,
             ),
@@ -105,7 +120,7 @@ class _BookDetailsState extends State<BookDetails> {
               children: [
                 Container(
                   width: screenSize.width,
-                  height: screenSize.height * 0.44,
+                  height: screenSize.height * 0.36,
                   decoration: BoxDecoration(
                     color: blues,
                     borderRadius: const BorderRadius.only(
@@ -115,7 +130,7 @@ class _BookDetailsState extends State<BookDetails> {
                   ),
                 ),
                 Positioned(
-                  bottom: 55,
+                  top: 5,
                   child: Container(
                     height: 250,
                     width: 170,
@@ -175,8 +190,8 @@ class _BookDetailsState extends State<BookDetails> {
                     children: List.generate(5, (index) {
                       return Icon(
                         index <
-                                (double.tryParse(_book.rating ?? '0.0') ?? 0)
-                                    .round()
+                            (double.tryParse(_book.rating ?? '0.0') ?? 0)
+                                .round()
                             ? Icons.star
                             : Icons.star_border,
                         color: stars,

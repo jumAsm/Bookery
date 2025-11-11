@@ -23,13 +23,19 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       createdAt: fields[9] as String?,
       pages: fields[10] as int?,
       price: fields[11] as int?,
+      isInBasket: fields[12] as bool?,
+      isBookmarked: fields[13] as bool?,
+      isOwned: fields[14] as bool?,
+      isOnSale: fields[15] as bool?,
+      note: fields[16] as String?,
+      isFavorite: fields[17] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, BookModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +59,19 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       ..writeByte(10)
       ..write(obj.pages)
       ..writeByte(11)
-      ..write(obj.price);
+      ..write(obj.price)
+      ..writeByte(12)
+      ..write(obj.isInBasket)
+      ..writeByte(13)
+      ..write(obj.isBookmarked)
+      ..writeByte(14)
+      ..write(obj.isOwned)
+      ..writeByte(15)
+      ..write(obj.isOnSale)
+      ..writeByte(16)
+      ..write(obj.note)
+      ..writeByte(17)
+      ..write(obj.isFavorite);
   }
 
   @override
@@ -62,7 +80,7 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BookModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
+          other is BookModelAdapter &&
+              runtimeType == other.runtimeType &&
+              typeId == other.typeId;
 }

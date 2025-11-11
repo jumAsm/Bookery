@@ -7,6 +7,7 @@ import '../widgets/recentAddedList.dart';
 import '../widgets/recsList.dart';
 import 'BasketPage.dart';
 import 'addBook.dart';
+import 'ProfilePage.dart';
 import '../cubits/books_cubit.dart';
 import 'BookMarket.dart';
 import '../widgets/AnimatedBar.dart';
@@ -24,6 +25,7 @@ class _HomepageState extends State<Homepage> {
     IconModel(id: 0, icon: Icons.home_filled),
     IconModel(id: 1, icon: Icons.add),
     IconModel(id: 2, icon: Icons.shopping_basket_outlined),
+    IconModel(id: 3, icon: Icons.person_outline),
   ];
 
   @override
@@ -56,6 +58,9 @@ class _HomepageState extends State<Homepage> {
     if (_currentIndex == 2) {
       return const BookMarket();
     }
+    if (_currentIndex == 3) {
+      return const ProfilePage();
+    }
 
     return BlocBuilder<BooksCubit, BooksState>(
       buildWhen: (previous, current) => true,
@@ -63,7 +68,7 @@ class _HomepageState extends State<Homepage> {
         bool isBasketNotEmpty = false;
         if (state is BooksSuccess) {
           isBasketNotEmpty = state.allBooks.any(
-            (book) => book.isInBasket == true,
+                (book) => book.isInBasket == true,
           );
         }
         final IconData basketIcon = isBasketNotEmpty
@@ -269,7 +274,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final booksCubit = BlocProvider.of<BooksCubit>(context);
-    final bool shouldShowBar = (_currentIndex == 0 || _currentIndex == 2);
+    final bool shouldShowBar = (_currentIndex == 0 || _currentIndex == 2 || _currentIndex == 3);
 
     return Scaffold(
       backgroundColor: backGroundClr,
@@ -278,10 +283,10 @@ class _HomepageState extends State<Homepage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: shouldShowBar
           ? AnimatedBar(
-              currentIcon: _currentIndex,
-              icons: _navIcons,
-              onTabTap: _onTabTapped,
-            )
+        currentIcon: _currentIndex,
+        icons: _navIcons,
+        onTabTap: _onTabTapped,
+      )
           : null,
     );
   }

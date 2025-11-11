@@ -49,7 +49,7 @@ class bookItemMarket extends StatelessWidget {
           crossAxisAlignment: crossAlignment,
           children: [
             Container(
-              height: 129,
+              height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
