@@ -164,7 +164,7 @@ class ProfilePage extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => BookDetails(
                             book: book,
-                            isOwned: isOwnedSection,
+                            isOwned: book.isOwned ?? false,
                           ),
                         ),
                       );
