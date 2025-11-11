@@ -212,6 +212,8 @@ class ProfilePage extends StatelessWidget {
                 .where((book) => book.isOwned == true)
                 .toList();
 
+            ownedBooks.sort((a, b) => (b.id ?? '').compareTo(a.id ?? ''));
+
             final List<BookModel> bookmarkedBooks = allBooks
                 .where((book) => book.isBookmarked == true)
                 .toList();
