@@ -22,7 +22,7 @@ class ProfilePage extends StatelessWidget {
     }
   }
 
-  Widget _buildProfileBookCard(BuildContext context, BookModel book) {
+  Widget _buildProfileBookCard(BuildContext context, BookModel book, {bool showPrice = true}) {
     const double cardWidth = 108;
     const double coverHeight = 153;
 
@@ -35,6 +35,8 @@ class ProfilePage extends StatelessWidget {
     final ImageProvider<Object> imageProvider = _getImageProvider(
       book.coverUrl,
     );
+
+    final String priceText = showPrice ? '${book.price ?? 0},00 SAR' : '';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
@@ -70,13 +72,13 @@ class ProfilePage extends StatelessWidget {
                     color: blacks,
                   ),
                 ),
-                const SizedBox(height: 2),
+
                 SizedBox(
                   width: double.infinity,
                   child: Row(
                     children: [
                       Text(
-                        '${book.price ?? 0},00 SAR',
+                        priceText,
                         textAlign: TextAlign.left,
                         style: GoogleFonts.onest(
                           fontSize: 11,
@@ -103,6 +105,8 @@ class ProfilePage extends StatelessWidget {
         required List<BookModel> books,
         required String emptyMessage,
         required IconData icon,
+        bool showPriceInCards = true,
+        bool isOwnedSection = false,
       }) {
     const double newListViewHeight = 205;
 
@@ -158,11 +162,18 @@ class ProfilePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BookDetails(book: book),
+                          builder: (context) => BookDetails(
+                            book: book,
+                            isOwned: isOwnedSection, // 🔥 تمرير قيمة isOwned الصحيحة
+                          ),
                         ),
                       );
                     },
-                    child: _buildProfileBookCard(context, book),
+                    child: _buildProfileBookCard(
+                      context,
+                      book,
+                      showPrice: showPriceInCards,
+                    ),
                   ),
                 );
               },
@@ -225,6 +236,8 @@ class ProfilePage extends StatelessWidget {
                     emptyMessage:
                     'You haven\'t purchased any books yet. Books you buy will appear here to read.',
                     icon: Icons.menu_book_rounded,
+                    showPriceInCards: false,
+                    isOwnedSection: true,
                   ),
                   const Divider(
                     color: blacks,
@@ -239,6 +252,7 @@ class ProfilePage extends StatelessWidget {
                     books: bookmarkedBooks,
                     emptyMessage: 'You haven\'t bookmarked any books yet.',
                     icon: Icons.bookmark_rounded,
+                    showPriceInCards: true,
                   ),
                   const Divider(
                     color: blacks,
@@ -254,6 +268,7 @@ class ProfilePage extends StatelessWidget {
                     emptyMessage:
                     'You haven\'t added any books to favorites yet. Books you like will appear here.',
                     icon: Icons.favorite_rounded,
+                    showPriceInCards: false,
                   ),
                   const Divider(
                     color: blacks,
@@ -268,6 +283,7 @@ class ProfilePage extends StatelessWidget {
                     books: onSaleBooks,
                     emptyMessage: 'You haven\'t listed any books for sale.',
                     icon: Icons.sell_rounded,
+                    showPriceInCards: true,
                   ),
                   const Divider(
                     color: blacks,

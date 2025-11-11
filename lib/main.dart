@@ -6,7 +6,6 @@ import 'models/BookModel.dart';
 import 'widgets/initial_data.dart';
 import 'cubits/books_cubit.dart';
 import 'cubits/add_book_cubit.dart';
-
 const String kBookBox = 'books_for_sale_box';
 
 void main() async {
@@ -15,6 +14,8 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BookModelAdapter());
   var bookBox = await Hive.openBox<BookModel>(kBookBox);
+
+
   if (bookBox.isEmpty) {
     for (var book in initialBookData) {
       await bookBox.add(book);

@@ -17,8 +17,8 @@ List<BookModel> initialBookData = [
     pages: 624,
     price: 71,
     isInBasket: false,
-    isBookmarked: true,
-    isOwned: true,
+    isBookmarked: false,
+    isOwned: false,
     isOnSale: false,
   ),
 
@@ -40,7 +40,7 @@ List<BookModel> initialBookData = [
     isInBasket: false,
     isBookmarked: false,
     isOwned: false,
-    isOnSale: true,
+    isOnSale: false,
   ),
 
   BookModel(
@@ -59,9 +59,9 @@ List<BookModel> initialBookData = [
     pages: 200,
     price: 55,
     isInBasket: false,
-    isBookmarked: true,
+    isBookmarked: false,
     isOwned: false,
-    isOnSale: true,
+    isOnSale: false,
   ),
 
   BookModel(
@@ -122,7 +122,7 @@ List<BookModel> initialBookData = [
     price: 79,
     isInBasket: false,
     isBookmarked: false,
-    isOwned: true,
+    isOwned: false,
     isOnSale: false,
   ),
   BookModel(
@@ -185,6 +185,6 @@ List<BookModel> initialBookData = [
     isInBasket: false,
     isBookmarked: false,
     isOwned: false,
-    isOnSale: true,
+    isOnSale: false,
   ),
 ];

@@ -5,6 +5,7 @@ import 'package:bookery/constants/colors.dart';
 import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
 import '../widgets/BasketItem.dart';
+import 'ProfilePage.dart';
 
 class BasketPage extends StatelessWidget {
   const BasketPage({super.key});
@@ -118,18 +119,23 @@ class BasketPage extends StatelessWidget {
                           book.isOwned = true;
                           book.save();
                         }
-
                         BlocProvider.of<BooksCubit>(context).fetchAllBooks();
-
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                               'Successfully purchased ${totalItems} books! You can now read them in your profile.',
                               style: GoogleFonts.onest(),
                             ),
-                            duration: const Duration(seconds: 2),
+                            duration: const Duration(milliseconds: 500),
                           ),
-                        );
+                        ).closed.then((reason) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProfilePage(),
+                            ),
+                          );
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: pinks,

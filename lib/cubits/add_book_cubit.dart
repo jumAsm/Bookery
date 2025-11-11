@@ -13,7 +13,7 @@ class AddBookCubit extends Cubit<AddBookState> {
   String? title, author, description, rating, language, category;
   String? coverUrl, bookUrl, price;
   String? pages;
-  bool? isOnSale = false; // NEW: Added isOnSale field
+  bool? isOnSale = false;
 
   void updateCoverUrl(String? path) {
     coverUrl = path;
@@ -25,7 +25,6 @@ class AddBookCubit extends Cubit<AddBookState> {
     emit(AddBookInitial());
   }
 
-  // NEW: Setter for isOnSale
   void updateOnSaleStatus(bool status) {
     isOnSale = status;
     emit(AddBookInitial());
@@ -51,8 +50,6 @@ class AddBookCubit extends Cubit<AddBookState> {
       emit(AddBookInitial());
     }
   }
-
-  // UPDATED: saveBook now uses the internal isOnSale field and accepts no parameter
   void saveBook() async {
     BookModel newBook = BookModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -69,7 +66,7 @@ class AddBookCubit extends Cubit<AddBookState> {
       createdAt: DateTime.now().toString(),
       isBookmarked: false,
       isOwned: false,
-      isOnSale: isOnSale, // USING THE INTERNAL FIELD
+      isOnSale: isOnSale,
     );
 
     emit(AddBookLoading());
@@ -95,7 +92,7 @@ class AddBookCubit extends Cubit<AddBookState> {
     bookUrl = null;
     price = null;
     pages = null;
-    isOnSale = false; // Also clear the new field
+    isOnSale = false;
     emit(AddBookInitial());
   }
 }

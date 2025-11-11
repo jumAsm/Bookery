@@ -32,4 +32,14 @@ class BooksCubit extends Cubit<BooksState> {
       emit(BooksInitial());
     }
   }
+
+  void toggleFavoriteStatus(BookModel book) {
+    book.isFavorite = !(book.isFavorite ?? false);
+    book.save();
+    if (state is BooksSuccess) {
+      emit(BooksSuccess((state as BooksSuccess).allBooks));
+    } else {
+      fetchAllBooks();
+    }
+  }
 }

@@ -1,4 +1,10 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'BookModel.dart';
+
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
 
 class BookModelAdapter extends TypeAdapter<BookModel> {
   @override
@@ -80,7 +86,7 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is BookModelAdapter &&
-              runtimeType == other.runtimeType &&
-              typeId == other.typeId;
+      other is BookModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

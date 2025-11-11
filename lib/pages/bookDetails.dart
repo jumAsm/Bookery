@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
 import 'package:bookery/constants/colors.dart';
+import 'BasketPage.dart';
 
 class BookDetails extends StatefulWidget {
   final BookModel book;
+  final bool isOwned;
 
-  const BookDetails({super.key, required this.book});
+  const BookDetails({super.key, required this.book, this.isOwned = false});
 
   @override
   State<BookDetails> createState() => _BookDetailsState();
@@ -45,10 +47,9 @@ class _BookDetailsState extends State<BookDetails> {
     );
   }
 
-  void _toggleBasketStatus() {
-    final bool currentStatus = _book.isInBasket ?? false;
+  void _toggleFavoriteStatus() {
     setState(() {
-      _book.isInBasket = !currentStatus;
+      _book.isFavorite = !(_book.isFavorite ?? false);
       _book.save();
     });
 
@@ -57,14 +58,43 @@ class _BookDetailsState extends State<BookDetails> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          (_book.isInBasket ?? false)
-              ? 'Book added to basket!'
-              : 'Book removed from basket!',
+          (_book.isFavorite ?? false)
+              ? 'Book added to favorites!'
+              : 'Book removed from favorites!',
           style: GoogleFonts.onest(),
         ),
         duration: const Duration(milliseconds: 1000),
       ),
     );
+  }
+
+  void _toggleBasketStatus() {
+    final bool currentStatus = _book.isInBasket ?? false;
+
+    if (currentStatus) {
+      // 🔥 المنطق الجديد: إذا كان في السلة بالفعل، انتقل إلى صفحة السلة
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BasketPage()),
+      );
+    } else {
+      setState(() {
+        _book.isInBasket = true;
+        _book.save();
+      });
+
+      BlocProvider.of<BooksCubit>(context).fetchAllBooks();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Book added to basket!',
+            style: GoogleFonts.onest(),
+          ),
+          duration: const Duration(milliseconds: 1000),
+        ),
+      );
+    }
   }
 
   @override
@@ -76,9 +106,9 @@ class _BookDetailsState extends State<BookDetails> {
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-    _book.coverUrl != null &&
-        (_book.coverUrl!.startsWith('http') ||
-            _book.coverUrl!.startsWith('https'))
+        _book.coverUrl != null &&
+            (_book.coverUrl!.startsWith('http') ||
+                _book.coverUrl!.startsWith('https'))
         ? NetworkImage(_book.coverUrl!)
         : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
@@ -98,10 +128,23 @@ class _BookDetailsState extends State<BookDetails> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
+          if (widget.isOwned)
+            IconButton(
+              icon: Icon(
+                (_book.isFavorite ?? false)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: (_book.isFavorite ?? false) ? pinks : backGroundClr,
+                size: 22,
+              ),
+              onPressed: _toggleFavoriteStatus,
+            ),
           IconButton(
             icon: Icon(
-              (_book.isBookmarked ?? false) ? Icons.bookmark : Icons.bookmark_border,
-              color: backGroundClr,
+              (_book.isBookmarked ?? false)
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+              color: (_book.isBookmarked ?? false) ? stars : backGroundClr,
               size: 22,
             ),
             onPressed: _toggleBookmarkStatus,
@@ -120,7 +163,7 @@ class _BookDetailsState extends State<BookDetails> {
               children: [
                 Container(
                   width: screenSize.width,
-                  height: screenSize.height * 0.36,
+                  height: 300,
                   decoration: BoxDecoration(
                     color: blues,
                     borderRadius: const BorderRadius.only(
@@ -190,8 +233,8 @@ class _BookDetailsState extends State<BookDetails> {
                     children: List.generate(5, (index) {
                       return Icon(
                         index <
-                            (double.tryParse(_book.rating ?? '0.0') ?? 0)
-                                .round()
+                                (double.tryParse(_book.rating ?? '0.0') ?? 0)
+                                    .round()
                             ? Icons.star
                             : Icons.star_border,
                         color: stars,
@@ -304,7 +347,7 @@ class _BookDetailsState extends State<BookDetails> {
         child: Row(
           children: [
             Text(
-              '${_book.price ?? 0},00 SAR',
+              '${_book.price ?? 0},00 SR',
               style: GoogleFonts.unbounded(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,

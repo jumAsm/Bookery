@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:io';
 import 'package:bookery/constants/colors.dart';
+import '../models/BookModel.dart';
+import 'dart:io';
 
 class BookItem extends StatelessWidget {
-  final String title;
-  final String author;
-  final String coverUrl;
-  final String price;
-  final String language;
+  final BookModel book;
+  const BookItem({super.key, required this.book});
 
-  const BookItem({
-    super.key,
-    required this.title,
-    required this.author,
-    required this.coverUrl,
-    required this.price,
-    required this.language,
-  });
+  ImageProvider<Object> _getImageProvider(String? coverUrl) {
+    if (coverUrl == null || coverUrl.isEmpty) {
+      return const AssetImage('assets/placeholder.png');
+    }
+
+    if (coverUrl.startsWith('http') || coverUrl.startsWith('https')) {
+      return NetworkImage(coverUrl);
+    } else {
+      return FileImage(File(coverUrl));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bool isArabic = language == 'Arabic';
-    final crossAlignment = isArabic
-        ? CrossAxisAlignment.end
-        : CrossAxisAlignment.start;
+    final bool isArabic = book.language == 'Arabic';
+    final crossAlignment =
+    isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     final textAlignment = isArabic ? TextAlign.right : TextAlign.left;
 
-    final ImageProvider<Object> imageProvider =
-        coverUrl.startsWith('http') || coverUrl.startsWith('https')
-        ? NetworkImage(coverUrl)
-        : FileImage(File(coverUrl));
+    final ImageProvider<Object> imageProvider = _getImageProvider(book.coverUrl);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -43,30 +40,34 @@ class BookItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: crossAlignment,
           children: [
-            Container(
-              width: 120,
-              height: 170,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
-              ),
+            Stack(
+              children: [
+                Container(
+                  width: 120,
+                  height: 170,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image:
+                    DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                  ),
+                ),
+              ],
             ),
-
             const SizedBox(height: 8),
-
             SizedBox(
               height: 55,
               child: Column(
                 crossAxisAlignment: crossAlignment,
                 children: [
                   Text(
-                    title,
+                    book.title ?? 'No Title',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: textAlignment,
                     style: GoogleFonts.onest(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      color: blacks,
                     ),
                   ),
                   const Spacer(),
@@ -75,9 +76,9 @@ class BookItem extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          price,
+                          '${book.price ?? 0},00 SAR',
                           textAlign: TextAlign.left,
-                          style: TextStyle(
+                          style: GoogleFonts.onest(
                             fontSize: 11,
                             color: priceGr,
                             fontWeight: FontWeight.w500,
