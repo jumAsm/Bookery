@@ -342,6 +342,18 @@ class _BookDetailsState extends State<BookDetails> {
                       );
                     }),
                   ),
+                  if (isOnSale)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        '${_book.price ?? 0},00 SR',
+                        style: GoogleFonts.unbounded(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: priceGr,
+                        ),
+                      ),
+                    ),
 
                   const SizedBox(height: 20),
                   Align(
@@ -449,7 +461,7 @@ class _BookDetailsState extends State<BookDetails> {
           child: Container(
             height: 45,
             decoration: BoxDecoration(
-              color: yellows,
+              color: blues,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -465,8 +477,8 @@ class _BookDetailsState extends State<BookDetails> {
               'This Book is Listed on Market',
               style: GoogleFonts.unbounded(
                 fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: blacks,
+                fontWeight: FontWeight.w400,
+                color: backGroundClr,
               ),
             ),
           ),
