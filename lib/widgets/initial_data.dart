@@ -2,6 +2,26 @@ import '../models/BookModel.dart';
 
 List<BookModel> initialBookData = [
   BookModel(
+    id: "10",
+    title: "كتاب للبيع التجريبي",
+    author: "المستخدم البائع",
+    description:
+    "هذا كتاب تجريبي تم عرضه للبيع في السوق لاختبار ميزة التعديل والحذف وزر 'Listed on Market'.",
+    rating: "3.9",
+    coverUrl:
+    "https://i.pinimg.com/736x/87/42/1d/87421dc4b1d6f734a7429188d447f525.jpg",
+    bookurl: "placeholder_5.pdf",
+    category: "Psychology",
+    language: "Arabic",
+    createdAt: DateTime.now().toString(),
+    pages: 300,
+    price: 35,
+    isInBasket: false,
+    isBookmarked: false,
+    isOwned: false,
+    isOnSale: true,
+  ),
+  BookModel(
     id: "1",
     title: "The Laws of Human Nature",
     author: "Robert Greene",

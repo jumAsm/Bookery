@@ -42,4 +42,20 @@ class BooksCubit extends Cubit<BooksState> {
       fetchAllBooks();
     }
   }
+
+  void updateBook(BookModel book) {
+    book.save();
+    fetchAllBooks();
+  }
+
+  void deleteBook(String bookId) {
+    var booksBox = Hive.box<BookModel>(kBookBox);
+    BookModel? bookToDelete = booksBox.values.firstWhere(
+          (book) => book.id == bookId,
+    );
+    if (bookToDelete != null) {
+      bookToDelete.delete();
+      fetchAllBooks();
+    }
+  }
 }

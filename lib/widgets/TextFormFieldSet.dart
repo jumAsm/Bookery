@@ -8,6 +8,7 @@ class TextFormFieldSet extends StatelessWidget {
   final bool isNumber;
   final void Function(String? value)? onSaved;
   final String? Function(String? value)? validator;
+  final String? initialValue;
 
   const TextFormFieldSet({
     super.key,
@@ -16,11 +17,13 @@ class TextFormFieldSet extends StatelessWidget {
     this.isNumber = false,
     this.onSaved,
     this.validator,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       onSaved: onSaved,
       validator: validator,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,

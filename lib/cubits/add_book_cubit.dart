@@ -14,6 +14,23 @@ class AddBookCubit extends Cubit<AddBookState> {
   String? coverUrl, bookUrl, price;
   String? pages;
   bool? isOnSale = false;
+  String? existingId;
+
+  void initializeWithBook(BookModel book) {
+    existingId = book.id;
+    title = book.title;
+    author = book.author;
+    description = book.description;
+    rating = book.rating;
+    language = book.language;
+    category = book.category;
+    coverUrl = book.coverUrl;
+    bookUrl = book.bookurl;
+    price = book.price.toString();
+    pages = book.pages.toString();
+    isOnSale = book.isOnSale;
+    emit(AddBookInitial());
+  }
 
   void updateCoverUrl(String? path) {
     coverUrl = path;
@@ -50,29 +67,46 @@ class AddBookCubit extends Cubit<AddBookState> {
       emit(AddBookInitial());
     }
   }
-  void saveBook() async {
-    BookModel newBook = BookModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: title,
-      author: author,
-      description: description,
-      category: category,
-      pages: int.tryParse(pages ?? '0') ?? 0,
-      rating: rating,
-      language: language,
-      price: int.tryParse(price!) ?? 0,
-      coverUrl: coverUrl,
-      bookurl: bookUrl,
-      createdAt: DateTime.now().toString(),
-      isBookmarked: false,
-      isOwned: false,
-      isOnSale: isOnSale,
-    );
 
+  void saveBook({BookModel? existingBook}) async {
     emit(AddBookLoading());
     try {
       var box = Hive.box<BookModel>(kBookBox);
-      await box.add(newBook);
+
+      if (existingBook != null && existingBook.key != null) {
+        existingBook.title = title;
+        existingBook.author = author;
+        existingBook.description = description;
+        existingBook.category = category;
+        existingBook.pages = int.tryParse(pages ?? '0') ?? 0;
+        existingBook.rating = rating;
+        existingBook.language = language;
+        existingBook.price = int.tryParse(price!) ?? 0;
+        existingBook.coverUrl = coverUrl;
+        existingBook.bookurl = bookUrl;
+        existingBook.isOnSale = isOnSale;
+
+        await existingBook.save();
+      } else {
+        BookModel newBook = BookModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: title,
+          author: author,
+          description: description,
+          category: category,
+          pages: int.tryParse(pages ?? '0') ?? 0,
+          rating: rating,
+          language: language,
+          price: int.tryParse(price!) ?? 0,
+          coverUrl: coverUrl,
+          bookurl: bookUrl,
+          createdAt: DateTime.now().toString(),
+          isBookmarked: false,
+          isOwned: false,
+          isOnSale: isOnSale,
+        );
+        await box.add(newBook);
+      }
 
       clearForm();
       emit(AddBookSuccess());
@@ -82,6 +116,7 @@ class AddBookCubit extends Cubit<AddBookState> {
   }
 
   void clearForm() {
+    existingId = null;
     title = null;
     author = null;
     description = null;

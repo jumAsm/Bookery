@@ -10,9 +10,12 @@ import '../widgets/multiLineTextField.dart';
 import '../cubits/add_book_cubit.dart';
 import '../cubits/books_cubit.dart';
 import 'package:bookery/constants/colors.dart';
+import '../models/BookModel.dart';
 
 class AddBook extends StatefulWidget {
-  const AddBook({super.key});
+  final BookModel? existingBook;
+
+  const AddBook({super.key, this.existingBook});
 
   @override
   State<AddBook> createState() => _AddBookState();
@@ -20,6 +23,18 @@ class AddBook extends StatefulWidget {
 
 class _AddBookState extends State<AddBook> {
   bool _isOnSale = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final addBookCubit = BlocProvider.of<AddBookCubit>(context, listen: false);
+    if (widget.existingBook != null) {
+      addBookCubit.initializeWithBook(widget.existingBook!);
+    } else {
+      addBookCubit.clearForm();
+    }
+    _isOnSale = addBookCubit.isOnSale ?? false;
+  }
 
   String? _requiredValidator(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
@@ -49,6 +64,11 @@ class _AddBookState extends State<AddBook> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final addBookCubit = BlocProvider.of<AddBookCubit>(context);
+
+    // تحديث حالة _isOnSale من الكيوبيت عند البناء
+    if (addBookCubit.isOnSale != _isOnSale) {
+      _isOnSale = addBookCubit.isOnSale ?? false;
+    }
 
     List<Map<String, String>> categoryData = [
       {"key": "Fiction", "label": "Fiction"},
@@ -108,7 +128,7 @@ class _AddBookState extends State<AddBook> {
 
                           const Spacer(flex: 1),
                           Text(
-                            "Sell Your Book",
+                            widget.existingBook != null ? "Edit Book" : "Sell Your Book",
                             style: GoogleFonts.unbounded(
                               fontSize: 16,
                               color: blacks,
@@ -265,6 +285,7 @@ class _AddBookState extends State<AddBook> {
                         ),
                         const SizedBox(height: 2),
                         TextFormFieldSet(
+                          initialValue: addBookCubit.title,
                           hintText: "Book Title",
                           icon: Icons.book,
                           onSaved: (value) => addBookCubit.title = value,
@@ -273,12 +294,14 @@ class _AddBookState extends State<AddBook> {
                         ),
                         const SizedBox(height: 10),
                         MultiLineTextField(
+                          initialValue: addBookCubit.description,
                           hintText: "Book Description",
                           onSaved: (value) => addBookCubit.description = value,
                           icon: Icons.short_text_sharp,
                         ),
                         const SizedBox(height: 10),
                         TextFormFieldSet(
+                          initialValue: addBookCubit.author,
                           hintText: "Author Name",
                           icon: Icons.person,
                           onSaved: (value) => addBookCubit.author = value,
@@ -290,6 +313,7 @@ class _AddBookState extends State<AddBook> {
                           children: [
                             Expanded(
                               child: TextFormFieldSet(
+                                initialValue: addBookCubit.pages,
                                 hintText: "Pages",
                                 isNumber: true,
                                 icon: Icons.menu_book_rounded,
@@ -301,6 +325,7 @@ class _AddBookState extends State<AddBook> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: TextFormFieldSet(
+                                initialValue: addBookCubit.rating,
                                 hintText: "Rating",
                                 isNumber: true,
                                 icon: Icons.star_rate,
@@ -313,6 +338,7 @@ class _AddBookState extends State<AddBook> {
                         ),
                         const SizedBox(height: 10),
                         TextFormFieldSet(
+                          initialValue: addBookCubit.price,
                           hintText: "Price (SAR)",
                           isNumber: true,
                           icon: Icons.payments_sharp,
@@ -330,6 +356,7 @@ class _AddBookState extends State<AddBook> {
                         const SizedBox(height: 10),
 
                         DropdownButtonFormField<String>(
+                          value: addBookCubit.category,
                           hint: Text(
                             "Select Category",
                             style: GoogleFonts.onest(
@@ -377,6 +404,7 @@ class _AddBookState extends State<AddBook> {
                         const SizedBox(height: 10),
 
                         DropdownButtonFormField<String>(
+                          value: addBookCubit.language,
                           hint: Text(
                             "Select Language",
                             style: GoogleFonts.onest(
@@ -436,10 +464,13 @@ class _AddBookState extends State<AddBook> {
                             const Spacer(),
                             Switch(
                               value: _isOnSale,
-                              onChanged: (value) {
+                              onChanged: isLoading
+                                  ? null
+                                  : (value) {
                                 setState(() {
                                   _isOnSale = value;
                                 });
+                                addBookCubit.updateOnSaleStatus(value);
                               },
                               activeColor: pinks,
                             ),
@@ -460,30 +491,31 @@ class _AddBookState extends State<AddBook> {
               children: [
                 Expanded(
                   child: PrimaryButton(
-                    btnName: isLoading ? "Saving..." : "Save",
+                    btnName: isLoading
+                        ? "Saving..."
+                        : (widget.existingBook != null ? "Update" : "Save"),
                     ontap: isLoading
                         ? () {}
                         : () {
                       if (formKey.currentState!.validate()) {
                         if (addBookCubit.coverUrl == null ||
                             addBookCubit.bookUrl == null) {
-                          // ERROR: The member 'emit' can only be used within 'package:bloc/bloc.dart' or a test.
-                          // Note: This line still violates the Bloc rule, but we keep it here to maintain original logic flow.
-                          // The correct fix would be to implement a showMessage method inside the Cubit.
-                          // For now, let's proceed with the primary fix of the parameter.
-                          // addBookCubit.emit(
-                          //   AddBookFailure(
-                          //     "Please ensure both the cover image and book file are uploaded.",
-                          //   ),
-                          // );
-                          // return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please ensure both the cover image and book file are uploaded.",
+                                style: GoogleFonts.onest(),
+                              ),
+                              duration: const Duration(milliseconds: 1500),
+                            ),
+                          );
+                          return;
                         }
 
                         formKey.currentState!.save();
-
-                        // FIX: Pass the isOnSale status to the Cubit before saving.
                         addBookCubit.updateOnSaleStatus(_isOnSale);
-                        addBookCubit.saveBook(); // Call without parameter
+
+                        addBookCubit.saveBook(existingBook: widget.existingBook);
                       }
                     },
                   ),

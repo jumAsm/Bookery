@@ -6,6 +6,7 @@ import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
 import 'package:bookery/constants/colors.dart';
 import 'BasketPage.dart';
+import 'addBook.dart';
 
 class BookDetails extends StatefulWidget {
   final BookModel book;
@@ -98,7 +99,6 @@ class _BookDetailsState extends State<BookDetails> {
 
   void _readBook() {
     if (_book.bookurl != null && _book.bookurl!.isNotEmpty) {
-
       print('Attempting to open PDF at: ${_book.bookurl}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -122,6 +122,43 @@ class _BookDetailsState extends State<BookDetails> {
     }
   }
 
+  void _editBook() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddBook(existingBook: _book),
+      ),
+    ).then((_) {
+      context.read<BooksCubit>().fetchAllBooks();
+    });
+  }
+
+  void _deleteBook() {
+    context.read<BooksCubit>().deleteBook(_book.id!);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Book deleted successfully from market.',
+          style: GoogleFonts.onest(),
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+    Navigator.pop(context);
+  }
+
+  ImageProvider<Object> _getImageProvider(String? coverUrl) {
+    if (coverUrl == null || coverUrl.isEmpty) {
+      return const AssetImage('assets/placeholder.png');
+    }
+
+    if (coverUrl.startsWith('http') || coverUrl.startsWith('https')) {
+      return NetworkImage(coverUrl);
+    } else {
+      return FileImage(File(coverUrl));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -139,12 +176,14 @@ class _BookDetailsState extends State<BookDetails> {
 
     final bool inBasket = _book.isInBasket ?? false;
     final bool isOwned = widget.isOwned;
+    final bool isOnSale = _book.isOnSale ?? false;
 
-    String buttonText;
-    IconData buttonIcon;
-    Color buttonColor;
-    VoidCallback onPressedAction;
+    String buttonText = '';
+    IconData buttonIcon = Icons.error;
+    Color buttonColor = pinks;
+    VoidCallback onPressedAction = () {};
     bool showPrice = true;
+    bool isActionHidden = false;
 
     if (isOwned) {
       buttonText = 'Read Now';
@@ -152,6 +191,8 @@ class _BookDetailsState extends State<BookDetails> {
       buttonColor = blues;
       onPressedAction = _readBook;
       showPrice = false;
+    } else if (isOnSale) {
+      isActionHidden = true;
     } else {
       buttonText = inBasket ? 'In Basket' : 'Add to Basket';
       buttonIcon = inBasket ? Icons.check : Icons.add;
@@ -173,30 +214,42 @@ class _BookDetailsState extends State<BookDetails> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          // **تطبيق الشرط المطلوب بدقة:** يظهر زر التفضيل فقط إذا كان الكتاب مملوكًا (isOwned == true)
-          if (widget.isOwned)
+          if (isOnSale) ...[
+            IconButton(
+              icon: const Icon(Icons.edit, color: backGroundClr, size: 22),
+              onPressed: _editBook,
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_forever_rounded, color: pinks, size: 22),
+              onPressed: _deleteBook,
+            ),
+            const SizedBox(width: 8),
+          ]
+          else ...[
+            if (widget.isOwned)
+              IconButton(
+                icon: Icon(
+                  (_book.isFavorite ?? false)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: (_book.isFavorite ?? false) ? pinks : backGroundClr,
+                  size: 22,
+                ),
+                onPressed: _toggleFavoriteStatus,
+              ),
+
             IconButton(
               icon: Icon(
-                (_book.isFavorite ?? false)
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: (_book.isFavorite ?? false) ? pinks : backGroundClr,
+                (_book.isBookmarked ?? false)
+                    ? Icons.bookmark
+                    : Icons.bookmark_border,
+                color: (_book.isBookmarked ?? false) ? stars : backGroundClr,
                 size: 22,
               ),
-              onPressed: _toggleFavoriteStatus,
+              onPressed: _toggleBookmarkStatus,
             ),
-
-          IconButton(
-            icon: Icon(
-              (_book.isBookmarked ?? false)
-                  ? Icons.bookmark
-                  : Icons.bookmark_border,
-              color: (_book.isBookmarked ?? false) ? stars : backGroundClr,
-              size: 22,
-            ),
-            onPressed: _toggleBookmarkStatus,
-          ),
-          const SizedBox(width: 8),
+            const SizedBox(width: 8),
+          ],
         ],
       ),
 
@@ -211,9 +264,9 @@ class _BookDetailsState extends State<BookDetails> {
                 Container(
                   width: screenSize.width,
                   height: 300,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: blues,
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(70),
                       bottomRight: Radius.circular(70),
                     ),
@@ -388,7 +441,38 @@ class _BookDetailsState extends State<BookDetails> {
         ),
       ),
 
-      bottomNavigationBar: Container(
+      bottomNavigationBar: isActionHidden
+          ? Container(
+        padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15, top: 5),
+        decoration: const BoxDecoration(color: backGroundClr),
+        child: SafeArea(
+          child: Container(
+            height: 45,
+            decoration: BoxDecoration(
+              color: yellows,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              'This Book is Listed on Market',
+              style: GoogleFonts.unbounded(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: blacks,
+              ),
+            ),
+          ),
+        ),
+      )
+          : Container(
         padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15, top: 5),
         decoration: const BoxDecoration(color: backGroundClr),
         child: Row(
