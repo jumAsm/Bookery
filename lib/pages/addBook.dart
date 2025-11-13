@@ -95,43 +95,40 @@ class _AddBookState extends State<AddBook> {
 
         return Scaffold(
           backgroundColor: backGroundClr,
+          appBar: AppBar(
+            backgroundColor: backGroundClr,
+            elevation: 0,
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.keyboard_arrow_left,
+                size: 22,
+                color: blacks,
+              ),
+              onPressed: () {
+                addBookCubit.clearForm();
+                Navigator.pop(context);
+              },
+            ),
+            title: Text(
+              widget.existingBook != null ? "Edit Book" : "Sell Your Book",
+              style: GoogleFonts.unbounded(
+                fontSize: 16,
+                color: blacks,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
           body: Form(
             key: formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 45),
                   Column(
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.keyboard_arrow_left,
-                              size: 22,
-                              color: blacks,
-                            ),
-                            onPressed: () {
-                              addBookCubit.clearForm();
-                              Navigator.pop(context);
-                            },
-                          ),
-
-                          const Spacer(flex: 1),
-                          Text(
-                            widget.existingBook != null ? "Edit Book" : "Sell Your Book",
-                            style: GoogleFonts.unbounded(
-                              fontSize: 16,
-                              color: blacks,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const Spacer(flex: 2),
-                        ],
-                      ),
                       const SizedBox(height: 30),
+
                       InkWell(
                         onTap: isLoading
                             ? null

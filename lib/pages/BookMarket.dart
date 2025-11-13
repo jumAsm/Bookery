@@ -75,12 +75,11 @@ class BookMarket extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 4.0,
+                    horizontal: 16.0,
                     vertical: 10,
                   ),
                   child: Row(
                     children: [
-                      const Spacer(flex: 2),
                       Text(
                         'Book Market',
                         style: GoogleFonts.redRose(
@@ -89,7 +88,7 @@ class BookMarket extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Spacer(flex: 1),
+                      const Spacer(),
                       IconButton(
                         icon: Icon(basketIcon, color: basketColor),
                         onPressed: () {

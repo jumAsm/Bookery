@@ -9,6 +9,17 @@ const double cardHeight = 145.0;
 
 final List<BookModel> fixedRecommendedBooks = [
   BookModel(
+    id: "14",
+    title: "The Song of Achilles",
+    author: "Madeline Miller",
+    rating: "4.4",
+    coverUrl:
+    "https://i.pinimg.com/736x/35/0b/29/350b29b24856ef5d4b3d1b4e01dcf2bf.jpg",
+    language: "English",
+    pages: 408,
+    price: 35,
+  ),
+  BookModel(
     id: "4",
     title: "كافكا على الشاطئ",
     author: "هاروكي موراكامي",
@@ -20,23 +31,12 @@ final List<BookModel> fixedRecommendedBooks = [
     price: 51,
   ),
   BookModel(
-    id: "6",
-    title: "Man’s Search for Meaning",
-    author: "Viktor E. Frankl",
-    rating: "4.8",
-    coverUrl:
-        "https://i.pinimg.com/736x/f7/e0/04/f7e0049eb75c37d1865ae533734b8cac.jpg",
-    language: "English",
-    pages: 200,
-    price: 55,
-  ),
-  BookModel(
     id: "7",
     title: "The Picture of Dorian Gray",
     author: "Oscar Wilde",
     rating: "4.6",
     coverUrl:
-        "https://i.pinimg.com/736x/5f/e4/0e/5fe40e0c932a40dab7662e7494707c5e.jpg",
+    "https://i.pinimg.com/736x/47/9b/9f/479b9fb3af662656dcec039de3c46486.jpg",
     language: "English",
     pages: 254,
     price: 52,
@@ -160,7 +160,7 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                   : backGroundClr;
 
               final FontWeight titleFontWeight = book.language == 'Arabic'
-                  ? FontWeight.w800
+                  ? FontWeight.bold
                   : FontWeight.w500;
 
               final double topPosition =
@@ -210,12 +210,12 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.unbounded(
-                                fontSize: 14,
+                                fontSize: book.language == 'Arabic' ? 16 : 14,
                                 fontWeight: titleFontWeight,
                                 color: textColor,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                             SizedBox(height: (book.language == 'Arabic') ? 4 :8),
                             AnimatedOpacity(
                               opacity: isTapped ? 1.0 : 0.0,
                               duration: const Duration(milliseconds: 300),

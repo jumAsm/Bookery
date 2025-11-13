@@ -65,8 +65,8 @@ class BookItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: textAlignment,
                     style: GoogleFonts.onest(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      fontSize:  12,
+                      fontWeight: isArabic ? FontWeight.bold : FontWeight.w600,
                       color: blacks,
                     ),
                   ),
