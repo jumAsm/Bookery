@@ -117,6 +117,7 @@ class BasketPage extends StatelessWidget {
                         for (var book in basketItems) {
                           book.isInBasket = false;
                           book.isOwned = true;
+                          book.createdAt = DateTime.now().toIso8601String();
                           book.save();
                         }
                         BlocProvider.of<BooksCubit>(context).fetchAllBooks();

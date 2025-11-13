@@ -211,21 +211,39 @@ class ProfilePage extends StatelessWidget {
               allBooks = state.allBooks;
             }
 
+            // دالة مساعدة لفرز أي قائمة تنازليًا (الأحدث أولاً) بناءً على حقل تاريخ معين
+            int sortByDateDescending(BookModel a, BookModel b, String? Function(BookModel) getDate) {
+              final aDate = DateTime.tryParse(getDate(a) ?? '') ?? DateTime(1900);
+              final bDate = DateTime.tryParse(getDate(b) ?? '') ?? DateTime(1900);
+              return bDate.compareTo(aDate);
+            }
+
+            // Your Books (Sorted by last purchase/creation date)
             final List<BookModel> ownedBooks = allBooks
                 .where((book) => book.isOwned == true)
-                .toList();
+                .toList()
+              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.createdAt));
 
+
+            // Bookmarks (Sorted by last bookmark date - bookmarkDate)
             final List<BookModel> bookmarkedBooks = allBooks
                 .where((book) => book.isBookmarked == true)
-                .toList();
+                .toList()
+              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.bookmarkDate));
 
+
+            // Favorites (Sorted by last favorite date - favoriteDate)
             final List<BookModel> favoriteBooks = allBooks
                 .where((book) => book.isFavorite == true)
-                .toList();
+                .toList()
+              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.favoriteDate));
 
+
+            // Books on sale (Sorted by creation date)
             final List<BookModel> onSaleBooks = allBooks
                 .where((book) => book.isOnSale == true)
-                .toList();
+                .toList()
+              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.createdAt));
 
             return SingleChildScrollView(
               padding: const EdgeInsets.only(bottom: 70),

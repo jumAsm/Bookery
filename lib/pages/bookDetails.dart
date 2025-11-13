@@ -32,6 +32,11 @@ class _BookDetailsState extends State<BookDetails> {
   void _toggleBookmarkStatus() {
     setState(() {
       _book.isBookmarked = !(_book.isBookmarked ?? false);
+      if (_book.isBookmarked == true) {
+        _book.bookmarkDate = DateTime.now().toIso8601String();
+      } else {
+        _book.bookmarkDate = null;
+      }
       _book.save();
     });
 
@@ -53,6 +58,11 @@ class _BookDetailsState extends State<BookDetails> {
   void _toggleFavoriteStatus() {
     setState(() {
       _book.isFavorite = !(_book.isFavorite ?? false);
+      if (_book.isFavorite == true) {
+        _book.favoriteDate = DateTime.now().toIso8601String();
+      } else {
+        _book.favoriteDate = null;
+      }
       _book.save();
     });
 
@@ -507,7 +517,7 @@ class _BookDetailsState extends State<BookDetails> {
                         TextButton(
                           onPressed: _showRatingDialog,
                           child: Text(
-                          'Rate Book' ,
+                            'Rate Book' ,
                             style: GoogleFonts.unbounded(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
