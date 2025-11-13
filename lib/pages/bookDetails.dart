@@ -20,11 +20,13 @@ class BookDetails extends StatefulWidget {
 
 class _BookDetailsState extends State<BookDetails> {
   late BookModel _book;
+  double _selectedRating = 0.0;
 
   @override
   void initState() {
     super.initState();
     _book = widget.book;
+    _selectedRating = double.tryParse(_book.rating ?? '0.0') ?? 0.0;
   }
 
   void _toggleBookmarkStatus() {
@@ -179,6 +181,7 @@ class _BookDetailsState extends State<BookDetails> {
     setState(() {
       _book.readingStatus = newStatus;
       _book.save();
+      _selectedRating = double.tryParse(_book.rating ?? '0.0') ?? 0.0;
     });
 
     BlocProvider.of<BooksCubit>(context).fetchAllBooks();
@@ -191,6 +194,96 @@ class _BookDetailsState extends State<BookDetails> {
         ),
         duration: const Duration(milliseconds: 1000),
       ),
+    );
+  }
+
+  void _submitRating(double rating) {
+    setState(() {
+      _book.rating = rating.toStringAsFixed(1);
+      _book.save();
+      _selectedRating = rating;
+    });
+
+    BlocProvider.of<BooksCubit>(context).fetchAllBooks();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Book rated successfully: ${_book.rating}/5.0!',
+          style: GoogleFonts.onest(),
+        ),
+        duration: const Duration(milliseconds: 1500),
+      ),
+    );
+  }
+
+  void _showRatingDialog() {
+    double tempRating = _selectedRating > 0.0 ? _selectedRating : 5.0;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setStateSB) {
+            return AlertDialog(
+              backgroundColor: backGroundClr,
+              title: Text(
+                "Rate \"${_book.title}\"",
+                style: GoogleFonts.unbounded(color: pinks),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Select your rating:',
+                    style: GoogleFonts.onest(color: blacks),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      final starValue = index + 1.0;
+                      return InkWell(
+                        onTap: () {
+                          setStateSB(() {
+                            tempRating = starValue;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0.5),
+                          child: Icon(
+                            starValue <= tempRating ? Icons.star_rounded : Icons.star_border_rounded,
+                            color: stars,
+                            size: 26,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '${tempRating.toStringAsFixed(1)} / 5.0',
+                    style: GoogleFonts.onest(fontSize: 18, fontWeight: FontWeight.bold, color: blues),
+                  ),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: Text("Cancel", style: GoogleFonts.unbounded(color: blues)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                    _submitRating(tempRating);
+                  },
+                  child: Text("Submit", style: GoogleFonts.unbounded(color: pinks)),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -215,15 +308,16 @@ class _BookDetailsState extends State<BookDetails> {
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-        _book.coverUrl != null &&
-            (_book.coverUrl!.startsWith('http') ||
-                _book.coverUrl!.startsWith('https'))
+    _book.coverUrl != null &&
+        (_book.coverUrl!.startsWith('http') ||
+            _book.coverUrl!.startsWith('https'))
         ? NetworkImage(_book.coverUrl!)
         : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
     final bool inBasket = _book.isInBasket ?? false;
     final bool isOwned = widget.isOwned;
     final bool isOnSale = _book.isOnSale ?? false;
+    final bool isCompleted = (_book.readingStatus ?? 'On Going') == 'Completed';
 
     String buttonText = '';
     IconData buttonIcon = Icons.error;
@@ -378,31 +472,53 @@ class _BookDetailsState extends State<BookDetails> {
 
                   const SizedBox(height: 8),
 
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ...List.generate(5, (index) {
-                        return Icon(
-                          index <
-                                  (double.tryParse(_book.rating ?? '0.0') ?? 0)
-                                      .round()
-                              ? Icons.star
-                              : Icons.star_border,
-                          color: stars,
-                          size: 20,
-                        );
-                      }),
-                      const SizedBox(width: 8),
-                      Text(
-                        '${_book.rating ?? '0.0'}',
-                        style: GoogleFonts.onest(
-                          fontSize: 14,
-                          color: blacks,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ...List.generate(5, (index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                              child: Icon(
+                                index <
+                                    (double.tryParse(_book.rating ?? '0.0') ?? 0)
+                                        .round()
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: stars,
+                                size: 18,
+                              ),
+                            );
+                          }),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${_book.rating ?? '0.0'}',
+                            style: GoogleFonts.onest(
+                              fontSize: 14,
+                              color: blacks,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
+                      if (isOwned && isCompleted)
+                        TextButton(
+                          onPressed: _showRatingDialog,
+                          child: Text(
+                          'Rate Book' ,
+                            style: GoogleFonts.unbounded(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: pinks,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
+
                   if (isOnSale)
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
@@ -416,7 +532,7 @@ class _BookDetailsState extends State<BookDetails> {
                       ),
                     ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -595,7 +711,7 @@ class _BookDetailsState extends State<BookDetails> {
               ),
             ),
             const SizedBox(width: 10),
-            Container( // زر Read Now
+            Container(
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
