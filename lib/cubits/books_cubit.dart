@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../models/BookModel.dart';
-import '../../models/BookModel.dart';
 part 'books_state.dart';
 
 const String kBookBox = 'books_for_sale_box';

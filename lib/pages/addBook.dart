@@ -159,18 +159,16 @@ class _AddBookState extends State<AddBook> {
                               ),
                             ],
                             color: backGroundClr,
-                            // >>> التعديل لعرض غلاف الكتاب الموجود مسبقًا أو الصورة الجديدة <<<
                             image:
                             addBookCubit.coverUrl != null &&
                                 addBookCubit.coverUrl!.isNotEmpty
                                 ? DecorationImage(
                               image: addBookCubit.coverUrl!.startsWith('http')
-                                  ? NetworkImage(addBookCubit.coverUrl!) // للروابط الشبكية (الأغلفة المحفوظة)
-                                  : FileImage(File(addBookCubit.coverUrl!)),  // للمسارات المحلية (صورة جديدة)
+                                  ? NetworkImage(addBookCubit.coverUrl!)
+                                  : FileImage(File(addBookCubit.coverUrl!)),
                               fit: BoxFit.cover,
                             )
                                 : null,
-                            // >>> نهاية التعديل <<<
                           ),
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator())
@@ -320,33 +318,23 @@ class _AddBookState extends State<AddBook> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: TextFormFieldSet(
-                                initialValue: addBookCubit.rating,
-                                hintText: "Rating",
+                                initialValue: addBookCubit.price,
+                                hintText: "Price (SAR)",
                                 isNumber: true,
-                                icon: Icons.star_rate,
-                                onSaved: (value) => addBookCubit.rating = value,
-                                validator: (value) =>
-                                    _optionalNumericValidator(value, "Rating"),
+                                icon: Icons.payments_sharp,
+                                onSaved: (value) => addBookCubit.price = value,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter the Price (SAR)';
+                                  }
+                                  if (int.tryParse(value) == null) {
+                                    return 'Please enter a valid number for Price (SAR)';
+                                  }
+                                  return null;
+                                },
                               ),
                             ),
                           ],
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormFieldSet(
-                          initialValue: addBookCubit.price,
-                          hintText: "Price (SAR)",
-                          isNumber: true,
-                          icon: Icons.payments_sharp,
-                          onSaved: (value) => addBookCubit.price = value,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter the Price (SAR)';
-                            }
-                            if (int.tryParse(value) == null) {
-                              return 'Please enter a valid number for Price (SAR)';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: 10),
 
@@ -445,8 +433,6 @@ class _AddBookState extends State<AddBook> {
                           },
                         ),
                         const SizedBox(height: 10),
-
-                        // تم حذف Row الخاص بـ Is this book On Sale
 
                       ],
                     ),

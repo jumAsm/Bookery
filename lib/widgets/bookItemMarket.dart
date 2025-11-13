@@ -32,7 +32,7 @@ class bookItemMarket extends StatelessWidget {
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -50,7 +50,7 @@ class bookItemMarket extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 150,
+              height: 146,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
@@ -65,8 +65,8 @@ class bookItemMarket extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: textAlignment,
               style: GoogleFonts.unbounded(
-                fontSize: 9,
-                fontWeight: FontWeight.w600,
+                fontSize:isArabic ? 10 :9,
+                fontWeight: isArabic ? FontWeight.bold : FontWeight.w500,
                 color: blacks,
               ),
             ),

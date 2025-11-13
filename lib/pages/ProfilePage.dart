@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
     final String priceText = showPrice ? '${book.price ?? 0},00 SR' : '';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -57,7 +57,7 @@ class ProfilePage extends StatelessWidget {
                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 5),
             Column(
               crossAxisAlignment: crossAlignment,
               children: [
@@ -81,7 +81,7 @@ class ProfilePage extends StatelessWidget {
                         priceText,
                         textAlign: TextAlign.left,
                         style: GoogleFonts.onest(
-                          fontSize: 11,
+                          fontSize: 10,
                           color: priceGr,
                           fontWeight: FontWeight.w500,
                         ),
@@ -108,7 +108,7 @@ class ProfilePage extends StatelessWidget {
         bool showPriceInCards = true,
         bool isOwnedSection = false,
       }) {
-    const double newListViewHeight = 212;
+    const double newListViewHeight = 214;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

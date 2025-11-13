@@ -10,7 +10,7 @@ const String kBookBox = 'books_for_sale_box';
 class AddBookCubit extends Cubit<AddBookState> {
   AddBookCubit() : super(AddBookInitial());
 
-  String? title, author, description, rating, language, category;
+  String? title, author, description, language, category;
   String? coverUrl, bookUrl, price;
   String? pages;
   bool? isOnSale = false;
@@ -21,7 +21,6 @@ class AddBookCubit extends Cubit<AddBookState> {
     title = book.title;
     author = book.author;
     description = book.description;
-    rating = book.rating;
     language = book.language;
     category = book.category;
     coverUrl = book.coverUrl;
@@ -79,7 +78,6 @@ class AddBookCubit extends Cubit<AddBookState> {
         existingBook.description = description;
         existingBook.category = category;
         existingBook.pages = int.tryParse(pages ?? '0') ?? 0;
-        existingBook.rating = rating;
         existingBook.language = language;
         existingBook.price = int.tryParse(price!) ?? 0;
         existingBook.coverUrl = coverUrl;
@@ -95,7 +93,6 @@ class AddBookCubit extends Cubit<AddBookState> {
           description: description,
           category: category,
           pages: int.tryParse(pages ?? '0') ?? 0,
-          rating: rating,
           language: language,
           price: int.tryParse(price!) ?? 0,
           coverUrl: coverUrl,
@@ -120,7 +117,6 @@ class AddBookCubit extends Cubit<AddBookState> {
     title = null;
     author = null;
     description = null;
-    rating = null;
     language = null;
     category = null;
     coverUrl = null;

@@ -79,9 +79,9 @@ class BookItem extends StatelessWidget {
                           '${book.price ?? 0},00 SAR',
                           textAlign: TextAlign.left,
                           style: GoogleFonts.onest(
-                            fontSize: 11,
+                            fontSize: 10,
                             color: priceGr,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const Spacer(),
