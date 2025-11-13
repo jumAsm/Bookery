@@ -58,40 +58,43 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 5),
-            Column(
-              crossAxisAlignment: crossAlignment,
-              children: [
-                Text(
-                  book.title ?? 'No Title',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: textAlignment,
-                  style: GoogleFonts.onest(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: blacks,
+            SizedBox(
+              width: cardWidth,
+              child: Column(
+                crossAxisAlignment: crossAlignment,
+                children: [
+                  Text(
+                    book.title ?? 'No Title',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: textAlignment,
+                    style: GoogleFonts.onest(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: blacks,
+                    ),
                   ),
-                ),
 
-                SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Text(
-                        priceText,
-                        textAlign: TextAlign.left,
-                        style: GoogleFonts.onest(
-                          fontSize: 10,
-                          color: priceGr,
-                          fontWeight: FontWeight.w500,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Text(
+                          priceText,
+                          textAlign: TextAlign.left,
+                          style: GoogleFonts.onest(
+                            fontSize: 10,
+                            color: priceGr,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      const Spacer(),
-                      Icon(Icons.more_horiz_rounded, size: 14, color: blacks),
-                    ],
+                        const Spacer(),
+                        Icon(Icons.more_horiz_rounded, size: 14, color: blacks),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
