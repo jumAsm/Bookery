@@ -268,7 +268,7 @@ class _AddBookState extends State<AddBook> {
                         Text(
                           'Book Details',
                           style: GoogleFonts.unbounded(
-                            color: pinks,
+                            color: blues,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),

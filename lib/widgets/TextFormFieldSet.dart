@@ -28,7 +28,7 @@ class TextFormFieldSet extends StatelessWidget {
       validator: validator,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       style: GoogleFonts.onest(
-        color: pinks,
+        color: blues,
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),

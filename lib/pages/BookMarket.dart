@@ -81,11 +81,11 @@ class BookMarket extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        'Book Market',
+                        'Market',
                         style: GoogleFonts.redRose(
                           fontSize: 22,
-                          color: blacks,
                           fontWeight: FontWeight.bold,
+                          color: pinks,
                         ),
                       ),
                       const Spacer(),

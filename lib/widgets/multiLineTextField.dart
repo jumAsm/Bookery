@@ -6,23 +6,23 @@ class MultiLineTextField extends StatelessWidget {
   final String hintText;
   final IconData icon;
   final void Function(String? value)? onSaved;
-  final String? initialValue; // إضافة خاصية initialValue
+  final String? initialValue;
 
   const MultiLineTextField({
     super.key,
     required this.hintText,
     required this.icon,
     this.onSaved,
-    this.initialValue, // تهيئة الخاصية
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initialValue, // استخدام الخاصية هنا
+      initialValue: initialValue,
       onSaved: onSaved,
       style: GoogleFonts.onest(
-        color: pinks,
+        color: blues,
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),
