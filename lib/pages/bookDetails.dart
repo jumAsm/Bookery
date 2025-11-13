@@ -137,6 +137,9 @@ class _BookDetailsState extends State<BookDetails> {
       MaterialPageRoute(builder: (context) => AddBook(existingBook: _book)),
     ).then((_) {
       context.read<BooksCubit>().fetchAllBooks();
+      setState(() {
+        _selectedRating = double.tryParse(_book.rating ?? '0.0') ?? 0.0;
+      });
     });
   }
 
