@@ -211,35 +211,28 @@ class ProfilePage extends StatelessWidget {
               allBooks = state.allBooks;
             }
 
-            // دالة مساعدة لفرز أي قائمة تنازليًا (الأحدث أولاً) بناءً على حقل تاريخ معين
+
             int sortByDateDescending(BookModel a, BookModel b, String? Function(BookModel) getDate) {
               final aDate = DateTime.tryParse(getDate(a) ?? '') ?? DateTime(1900);
               final bDate = DateTime.tryParse(getDate(b) ?? '') ?? DateTime(1900);
               return bDate.compareTo(aDate);
             }
-
-            // Your Books (Sorted by last purchase/creation date)
             final List<BookModel> ownedBooks = allBooks
                 .where((book) => book.isOwned == true)
                 .toList()
               ..sort((a, b) => sortByDateDescending(a, b, (book) => book.createdAt));
 
-
-            // Bookmarks (Sorted by last bookmark date - bookmarkDate)
             final List<BookModel> bookmarkedBooks = allBooks
                 .where((book) => book.isBookmarked == true)
                 .toList()
               ..sort((a, b) => sortByDateDescending(a, b, (book) => book.bookmarkDate));
 
 
-            // Favorites (Sorted by last favorite date - favoriteDate)
             final List<BookModel> favoriteBooks = allBooks
                 .where((book) => book.isFavorite == true)
                 .toList()
               ..sort((a, b) => sortByDateDescending(a, b, (book) => book.favoriteDate));
 
-
-            // Books on sale (Sorted by creation date)
             final List<BookModel> onSaleBooks = allBooks
                 .where((book) => book.isOnSale == true)
                 .toList()
@@ -252,7 +245,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   _buildBookSection(
                     context,
-                    title: 'Your Books',
+                    title: 'Your Collection',
                     books: ownedBooks,
                     emptyMessage:
                     'You haven\'t purchased any books yet. Books you buy will appear here to read.',
@@ -300,7 +293,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   _buildBookSection(
                     context,
-                    title: 'Books on sale',
+                    title: 'Listings',
                     books: onSaleBooks,
                     emptyMessage: 'You haven\'t listed any books for sale.',
                     icon: Icons.sell_rounded,
