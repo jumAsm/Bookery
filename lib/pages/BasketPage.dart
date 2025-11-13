@@ -126,7 +126,7 @@ class BasketPage extends StatelessWidget {
                               'Successfully purchased ${totalItems} books! You can now read them in your profile.',
                               style: GoogleFonts.onest(),
                             ),
-                            duration: const Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 250),
                           ),
                         ).closed.then((reason) {
                           Navigator.pushAndRemoveUntil(

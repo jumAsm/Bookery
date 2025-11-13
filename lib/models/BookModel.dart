@@ -39,6 +39,8 @@ class BookModel extends HiveObject {
   String? note;
   @HiveField(17)
   bool? isFavorite;
+  @HiveField(18)
+  String? readingStatus;
 
   BookModel({
     this.id,
@@ -59,5 +61,6 @@ class BookModel extends HiveObject {
     this.isOnSale = false,
     this.note,
     this.isFavorite = false,
+    this.readingStatus = 'On Going',
   });
 }

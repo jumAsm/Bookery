@@ -35,13 +35,14 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       isOnSale: fields[15] as bool?,
       note: fields[16] as String?,
       isFavorite: fields[17] as bool?,
+      readingStatus: fields[18] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, BookModel obj) {
     writer
-      ..writeByte(18)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -77,7 +78,9 @@ class BookModelAdapter extends TypeAdapter<BookModel> {
       ..writeByte(16)
       ..write(obj.note)
       ..writeByte(17)
-      ..write(obj.isFavorite);
+      ..write(obj.isFavorite)
+      ..writeByte(18)
+      ..write(obj.readingStatus);
   }
 
   @override
