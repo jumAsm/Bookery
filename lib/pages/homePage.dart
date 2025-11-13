@@ -13,14 +13,15 @@ import 'BookMarket.dart';
 import '../widgets/AnimatedBar.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  final int initialIndex;
+  const Homepage({super.key, this.initialIndex = 0});
 
   @override
   State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
-  int _currentIndex = 0;
+  late int _currentIndex;
   final List<IconModel> _navIcons = [
     IconModel(id: 0, icon: Icons.home_filled),
     IconModel(id: 1, icon: Icons.add),
@@ -31,6 +32,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialIndex;
     BlocProvider.of<BooksCubit>(context).fetchAllBooks();
   }
 
@@ -68,7 +70,7 @@ class _HomepageState extends State<Homepage> {
         bool isBasketNotEmpty = false;
         if (state is BooksSuccess) {
           isBasketNotEmpty = state.allBooks.any(
-                (book) => book.isInBasket == true,
+            (book) => book.isInBasket == true,
           );
         }
         final IconData basketIcon = isBasketNotEmpty
@@ -84,7 +86,7 @@ class _HomepageState extends State<Homepage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
                   color: backGroundClr,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,64 +153,70 @@ class _HomepageState extends State<Homepage> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-
                       const SizedBox(height: 4),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            Categorysetting(
-                              label: 'Fiction',
-                              borderClr: pinks,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Categorysetting(
-                              label: 'Literature',
-                              borderClr: blues,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Categorysetting(
-                              label: 'Psychology',
-                              borderClr: yellows,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Categorysetting(
-                              label: 'Art',
-                              borderClr: greens,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Categorysetting(
-                              label: 'Poetry',
-                              borderClr: pinks,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Categorysetting(
-                              label: 'Biography',
-                              borderClr: blues,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            Categorysetting(
-                              label: 'History',
-                              borderClr: yellows,
-                              selected: false,
-                              onTap: () {},
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
+                  ),
+                ),
+                Container(
+                  color: backGroundClr,
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Row(
+                        children: [
+                          Categorysetting(
+                            label: 'Fiction',
+                            borderClr: pinks,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          Categorysetting(
+                            label: 'Literature',
+                            borderClr: blues,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          Categorysetting(
+                            label: 'Psychology',
+                            borderClr: yellows,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          Categorysetting(
+                            label: 'Art',
+                            borderClr: greens,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          Categorysetting(
+                            label: 'Poetry',
+                            borderClr: pinks,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          Categorysetting(
+                            label: 'Biography',
+                            borderClr: blues,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                          const SizedBox(width: 8),
+                          Categorysetting(
+                            label: 'History',
+                            borderClr: yellows,
+                            selected: false,
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -257,7 +265,6 @@ class _HomepageState extends State<Homepage> {
                         ),
                       ),
                       const Spacer(),
-                      Icon(Icons.keyboard_arrow_right, size: 20, color: blacks),
                     ],
                   ),
                 ),
@@ -274,7 +281,8 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final booksCubit = BlocProvider.of<BooksCubit>(context);
-    final bool shouldShowBar = (_currentIndex == 0 || _currentIndex == 2 || _currentIndex == 3);
+    final bool shouldShowBar =
+        (_currentIndex == 0 || _currentIndex == 2 || _currentIndex == 3);
 
     return Scaffold(
       backgroundColor: backGroundClr,
@@ -283,10 +291,10 @@ class _HomepageState extends State<Homepage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: shouldShowBar
           ? AnimatedBar(
-        currentIcon: _currentIndex,
-        icons: _navIcons,
-        onTabTap: _onTabTapped,
-      )
+              currentIcon: _currentIndex,
+              icons: _navIcons,
+              onTabTap: _onTabTapped,
+            )
           : null,
     );
   }

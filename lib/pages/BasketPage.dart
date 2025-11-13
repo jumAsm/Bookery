@@ -5,7 +5,7 @@ import 'package:bookery/constants/colors.dart';
 import '../cubits/books_cubit.dart';
 import '../models/BookModel.dart';
 import '../widgets/BasketItem.dart';
-import 'ProfilePage.dart';
+import 'homePage.dart';
 
 class BasketPage extends StatelessWidget {
   const BasketPage({super.key});
@@ -29,7 +29,7 @@ class BasketPage extends StatelessWidget {
           final totalItems = basketItems.length;
           final totalPrice = basketItems.fold<int>(
             0,
-                (sum, item) => sum + (item.price ?? 0),
+            (sum, item) => sum + (item.price ?? 0),
           );
 
           return Scaffold(
@@ -57,108 +57,137 @@ class BasketPage extends StatelessWidget {
             ),
             body: totalItems == 0
                 ? Center(
-              child: Text(
-                'Your basket is empty!',
-                style: GoogleFonts.onest(fontSize: 16, color: blacks),
-              ),
-            )
+                    child: Text(
+                      'Your basket is empty!',
+                      style: GoogleFonts.onest(fontSize: 16, color: blacks),
+                    ),
+                  )
                 : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: totalItems,
-              itemBuilder: (context, index) {
-                final book = basketItems[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: BasketItem(book: book),
-                );
-              },
-            ),
+                    padding: const EdgeInsets.all(16),
+                    itemCount: totalItems,
+                    itemBuilder: (context, index) {
+                      final book = basketItems[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: BasketItem(book: book),
+                      );
+                    },
+                  ),
 
             bottomNavigationBar: totalItems > 0
                 ? Container(
-              padding: const EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 15,
-                bottom: 25,
-              ),
-
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total Price:',
-                        style: GoogleFonts.unbounded(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: blacks,
+                    decoration: const BoxDecoration(color: backGroundClr),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
+                          right: 25,
+                          top: 5,
+                          bottom: 15,
                         ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '${totalPrice},00 SR',
-                        style: GoogleFonts.unbounded(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: priceGr,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 160,
-                    height: 45,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        for (var book in basketItems) {
-                          book.isInBasket = false;
-                          book.isOwned = true;
-                          book.createdAt = DateTime.now().toIso8601String();
-                          book.save();
-                        }
-                        BlocProvider.of<BooksCubit>(context).fetchAllBooks();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Successfully purchased ${totalItems} books! You can now read them in your profile.',
-                              style: GoogleFonts.onest(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Total Price:',
+                                  style: GoogleFonts.unbounded(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: blacks,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '${totalPrice},00 SR',
+                                  style: GoogleFonts.unbounded(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: priceGr,
+                                  ),
+                                ),
+                              ],
                             ),
-                            duration: const Duration(milliseconds: 250),
-                          ),
-                        ).closed.then((reason) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ProfilePage(),
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: SizedBox(
+                                width: 160,
+                                height: 45,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    for (var book in basketItems) {
+                                      book.isInBasket = false;
+                                      book.isOwned = true;
+                                      book.createdAt = DateTime.now()
+                                          .toIso8601String();
+                                      book.save();
+                                    }
+                                    BlocProvider.of<BooksCubit>(
+                                      context,
+                                    ).fetchAllBooks();
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Successfully purchased ${totalItems} books! You can now read them in your profile.',
+                                              style: GoogleFonts.onest(),
+                                            ),
+                                            duration: const Duration(
+                                              milliseconds: 250,
+                                            ),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((reason) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Homepage(
+                                                    initialIndex: 3,
+                                                  ),
+                                            ),
+                                          );
+                                        });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: pinks,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    elevation: 0,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Checkout',
+                                    style: GoogleFonts.unbounded(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: backGroundClr,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                                (Route<dynamic> route) => route.isFirst,
-                          );
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: pinks,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: Text(
-                        'Checkout',
-                        style: GoogleFonts.unbounded(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: backGroundClr,
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                  )
                 : null,
           );
         }

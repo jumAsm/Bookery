@@ -43,9 +43,7 @@ class recentAddedList extends StatelessWidget {
                         ),
                       );
                     },
-                    child: BookItem(
-                      book: book,
-                    ),
+                    child: BookItem(book: book),
                   ),
                 );
               }).toList(),

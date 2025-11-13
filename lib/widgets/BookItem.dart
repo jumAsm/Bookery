@@ -23,11 +23,14 @@ class BookItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isArabic = book.language == 'Arabic';
-    final crossAlignment =
-    isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    final crossAlignment = isArabic
+        ? CrossAxisAlignment.end
+        : CrossAxisAlignment.start;
     final textAlignment = isArabic ? TextAlign.right : TextAlign.left;
 
-    final ImageProvider<Object> imageProvider = _getImageProvider(book.coverUrl);
+    final ImageProvider<Object> imageProvider = _getImageProvider(
+      book.coverUrl,
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -47,8 +50,10 @@ class BookItem extends StatelessWidget {
                   height: 180,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    image:
-                    DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ],
@@ -65,7 +70,7 @@ class BookItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: textAlignment,
                     style: GoogleFonts.onest(
-                      fontSize:  12,
+                      fontSize: 12,
                       fontWeight: isArabic ? FontWeight.bold : FontWeight.w600,
                       color: blacks,
                     ),

@@ -14,7 +14,7 @@ final List<BookModel> fixedRecommendedBooks = [
     author: "Madeline Miller",
     rating: "4.4",
     coverUrl:
-    "https://i.pinimg.com/736x/35/0b/29/350b29b24856ef5d4b3d1b4e01dcf2bf.jpg",
+        "https://i.pinimg.com/736x/35/0b/29/350b29b24856ef5d4b3d1b4e01dcf2bf.jpg",
     language: "English",
     pages: 408,
     price: 35,
@@ -36,7 +36,7 @@ final List<BookModel> fixedRecommendedBooks = [
     author: "Oscar Wilde",
     rating: "4.6",
     coverUrl:
-    "https://i.pinimg.com/736x/47/9b/9f/479b9fb3af662656dcec039de3c46486.jpg",
+        "https://i.pinimg.com/736x/47/9b/9f/479b9fb3af662656dcec039de3c46486.jpg",
     language: "English",
     pages: 254,
     price: 52,
@@ -215,7 +215,9 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                                 color: textColor,
                               ),
                             ),
-                             SizedBox(height: (book.language == 'Arabic') ? 4 :8),
+                            SizedBox(
+                              height: (book.language == 'Arabic') ? 4 : 8,
+                            ),
                             AnimatedOpacity(
                               opacity: isTapped ? 1.0 : 0.0,
                               duration: const Duration(milliseconds: 300),

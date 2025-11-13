@@ -22,7 +22,11 @@ class ProfilePage extends StatelessWidget {
     }
   }
 
-  Widget _buildProfileBookCard(BuildContext context, BookModel book, {bool showPrice = true}) {
+  Widget _buildProfileBookCard(
+    BuildContext context,
+    BookModel book, {
+    bool showPrice = true,
+  }) {
     const double cardWidth = 108;
     const double coverHeight = 160;
 
@@ -39,7 +43,7 @@ class ProfilePage extends StatelessWidget {
     final String priceText = showPrice ? '${book.price ?? 0},00 SR' : '';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      padding: const EdgeInsets.only(top: 4, right: 4, left: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -49,15 +53,29 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: crossAlignment,
           children: [
-            Container(
-              width: cardWidth,
-              height: coverHeight,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        BookDetails(book: book, isOwned: book.isOwned ?? false),
+                  ),
+                );
+              },
+              child: Container(
+                width: cardWidth,
+                height: coverHeight,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 3),
             SizedBox(
               width: cardWidth,
               child: Column(
@@ -103,14 +121,14 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _buildBookSection(
-      BuildContext context, {
-        required String title,
-        required List<BookModel> books,
-        required String emptyMessage,
-        required IconData icon,
-        bool showPriceInCards = true,
-        bool isOwnedSection = false,
-      }) {
+    BuildContext context, {
+    required String title,
+    required List<BookModel> books,
+    required String emptyMessage,
+    required IconData icon,
+    bool showPriceInCards = true,
+    bool isOwnedSection = false,
+  }) {
     const double newListViewHeight = 214;
 
     return Column(
@@ -190,19 +208,6 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backGroundClr,
-      appBar: AppBar(
-        backgroundColor: backGroundClr,
-        elevation: 0,
-        title: Text(
-          'Personal Library',
-          style: GoogleFonts.redRose(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: pinks,
-          ),
-        ),
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: BlocBuilder<BooksCubit, BooksState>(
           builder: (context, state) {
@@ -211,44 +216,76 @@ class ProfilePage extends StatelessWidget {
               allBooks = state.allBooks;
             }
 
-
-            int sortByDateDescending(BookModel a, BookModel b, String? Function(BookModel) getDate) {
-              final aDate = DateTime.tryParse(getDate(a) ?? '') ?? DateTime(1900);
-              final bDate = DateTime.tryParse(getDate(b) ?? '') ?? DateTime(1900);
+            int sortByDateDescending(
+              BookModel a,
+              BookModel b,
+              String? Function(BookModel) getDate,
+            ) {
+              final aDate =
+                  DateTime.tryParse(getDate(a) ?? '') ?? DateTime(1900);
+              final bDate =
+                  DateTime.tryParse(getDate(b) ?? '') ?? DateTime(1900);
               return bDate.compareTo(aDate);
             }
-            final List<BookModel> ownedBooks = allBooks
-                .where((book) => book.isOwned == true)
-                .toList()
-              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.createdAt));
 
-            final List<BookModel> bookmarkedBooks = allBooks
-                .where((book) => book.isBookmarked == true)
-                .toList()
-              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.bookmarkDate));
+            final List<BookModel> ownedBooks =
+                allBooks.where((book) => book.isOwned == true).toList()..sort(
+                  (a, b) =>
+                      sortByDateDescending(a, b, (book) => book.createdAt),
+                );
 
+            final List<BookModel> bookmarkedBooks =
+                allBooks.where((book) => book.isBookmarked == true).toList()
+                  ..sort(
+                    (a, b) =>
+                        sortByDateDescending(a, b, (book) => book.bookmarkDate),
+                  );
 
-            final List<BookModel> favoriteBooks = allBooks
-                .where((book) => book.isFavorite == true)
-                .toList()
-              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.favoriteDate));
+            final List<BookModel> favoriteBooks =
+                allBooks.where((book) => book.isFavorite == true).toList()
+                  ..sort(
+                    (a, b) =>
+                        sortByDateDescending(a, b, (book) => book.favoriteDate),
+                  );
 
-            final List<BookModel> onSaleBooks = allBooks
-                .where((book) => book.isOnSale == true)
-                .toList()
-              ..sort((a, b) => sortByDateDescending(a, b, (book) => book.createdAt));
+            final List<BookModel> onSaleBooks =
+                allBooks.where((book) => book.isOnSale == true).toList()..sort(
+                  (a, b) =>
+                      sortByDateDescending(a, b, (book) => book.createdAt),
+                );
 
             return SingleChildScrollView(
               padding: const EdgeInsets.only(bottom: 70),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      right: 16,
+                      left: 16,
+                      top: 16,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Personal Library',
+                          style: GoogleFonts.redRose(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: pinks,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   _buildBookSection(
                     context,
                     title: 'Your Collection',
                     books: ownedBooks,
                     emptyMessage:
-                    'You haven\'t purchased any books yet. Books you buy will appear here to read.',
+                        'You haven\'t purchased any books yet. Books you buy will appear here to read.',
                     icon: Icons.menu_book_rounded,
                     showPriceInCards: false,
                     isOwnedSection: true,
@@ -280,7 +317,7 @@ class ProfilePage extends StatelessWidget {
                     title: 'Favorites',
                     books: favoriteBooks,
                     emptyMessage:
-                    'You haven\'t added any books to favorites yet. Books you like will appear here.',
+                        'You haven\'t added any books to favorites yet. Books you like will appear here.',
                     icon: Icons.favorite_rounded,
                     showPriceInCards: false,
                   ),

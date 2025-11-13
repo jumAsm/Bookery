@@ -231,7 +231,7 @@ class _BookDetailsState extends State<BookDetails> {
   }
 
   void _showRatingDialog() {
-    double tempRating = _selectedRating > 0.0 ? _selectedRating : 5.0;
+    double tempRating = 0.0;
 
     showDialog(
       context: context,
@@ -265,7 +265,9 @@ class _BookDetailsState extends State<BookDetails> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 0.5),
                           child: Icon(
-                            starValue <= tempRating ? Icons.star_rounded : Icons.star_border_rounded,
+                            starValue <= tempRating
+                                ? Icons.star_rounded
+                                : Icons.star_border_rounded,
                             color: stars,
                             size: 26,
                           ),
@@ -276,21 +278,31 @@ class _BookDetailsState extends State<BookDetails> {
                   const SizedBox(height: 10),
                   Text(
                     '${tempRating.toStringAsFixed(1)} / 5.0',
-                    style: GoogleFonts.onest(fontSize: 18, fontWeight: FontWeight.bold, color: blues),
+                    style: GoogleFonts.onest(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: blues,
+                    ),
                   ),
                 ],
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: Text("Cancel", style: GoogleFonts.unbounded(color: blues)),
+                  child: Text(
+                    "Cancel",
+                    style: GoogleFonts.unbounded(color: blues),
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.pop(dialogContext);
                     _submitRating(tempRating);
                   },
-                  child: Text("Submit", style: GoogleFonts.unbounded(color: pinks)),
+                  child: Text(
+                    "Submit",
+                    style: GoogleFonts.unbounded(color: pinks),
+                  ),
                 ),
               ],
             );
@@ -321,9 +333,9 @@ class _BookDetailsState extends State<BookDetails> {
         : CrossAxisAlignment.start;
 
     final ImageProvider<Object> imageProvider =
-    _book.coverUrl != null &&
-        (_book.coverUrl!.startsWith('http') ||
-            _book.coverUrl!.startsWith('https'))
+        _book.coverUrl != null &&
+            (_book.coverUrl!.startsWith('http') ||
+                _book.coverUrl!.startsWith('https'))
         ? NetworkImage(_book.coverUrl!)
         : FileImage(File(_book.coverUrl!)) as ImageProvider<Object>;
 
@@ -493,11 +505,16 @@ class _BookDetailsState extends State<BookDetails> {
                         children: [
                           ...List.generate(5, (index) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 1.0,
+                              ),
                               child: Icon(
                                 index <
-                                    (double.tryParse(_book.rating ?? '0.0') ?? 0)
-                                        .round()
+                                        (double.tryParse(
+                                                  _book.rating ?? '0.0',
+                                                ) ??
+                                                0)
+                                            .round()
                                     ? Icons.star
                                     : Icons.star_border,
                                 color: stars,
@@ -520,7 +537,7 @@ class _BookDetailsState extends State<BookDetails> {
                         TextButton(
                           onPressed: _showRatingDialog,
                           child: Text(
-                            'Rate Book' ,
+                            'Rate Book',
                             style: GoogleFonts.unbounded(
                               fontSize: 13,
                               fontWeight: FontWeight.w400,
@@ -645,178 +662,203 @@ class _BookDetailsState extends State<BookDetails> {
 
       bottomNavigationBar: isActionHidden
           ? Container(
-        padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15, top: 5),
-        decoration: const BoxDecoration(color: backGroundClr),
-        child: SafeArea(
-          child: Container(
-            height: 45,
-            decoration: BoxDecoration(
-              color: blues,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  spreadRadius: 2,
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              'This Book is Listed on Market',
-              style: GoogleFonts.unbounded(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: backGroundClr,
+              padding: const EdgeInsets.only(
+                left: 25,
+                right: 25,
+                bottom: 15,
+                top: 5,
               ),
-            ),
-          ),
-        ),
-      )
-          : Container(
-        padding: const EdgeInsets.only(left: 25, right: 25, bottom: 15, top: 5),
-        decoration: const BoxDecoration(color: backGroundClr),
-        child: isOwned
-            ? Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: 43,
-                decoration: BoxDecoration(
-                  color: backGroundClr,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: blues, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, 1),
+              decoration: const BoxDecoration(color: backGroundClr),
+              child: SafeArea(
+                child: Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: blues,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'This Book is Listed on Market',
+                    style: GoogleFonts.unbounded(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: backGroundClr,
                     ),
-                  ],
+                  ),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    isExpanded: true,
-                    value: _book.readingStatus ?? 'On Going',
-                    icon: Icon(Icons.arrow_drop_down, color: blues),
-                    style: GoogleFonts.onest(fontSize: 14, color: blacks),
-                    dropdownColor: backGroundClr,
-                    onChanged: _updateReadingStatus,
-                    items: <String>['On Going', 'Completed']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: GoogleFonts.onest(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: value == (_book.readingStatus ?? 'On Going') ? blues : blacks,
+              ),
+            )
+          : Container(
+              padding: const EdgeInsets.only(
+                left: 25,
+                right: 25,
+                bottom: 15,
+                top: 5,
+              ),
+              decoration: const BoxDecoration(color: backGroundClr),
+              child: isOwned
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            height: 43,
+                            decoration: BoxDecoration(
+                              color: backGroundClr,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: blues, width: 2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 3,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                value: _book.readingStatus ?? 'On Going',
+                                icon: Icon(Icons.arrow_drop_down, color: blues),
+                                style: GoogleFonts.onest(
+                                  fontSize: 14,
+                                  color: blacks,
+                                ),
+                                dropdownColor: backGroundClr,
+                                onChanged: _updateReadingStatus,
+                                items: <String>['On Going', 'Completed']
+                                    .map<DropdownMenuItem<String>>((
+                                      String value,
+                                    ) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: GoogleFonts.onest(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                value ==
+                                                    (_book.readingStatus ??
+                                                        'On Going')
+                                                ? blues
+                                                : blacks,
+                                          ),
+                                        ),
+                                      );
+                                    })
+                                    .toList(),
+                              ),
+                            ),
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
+                        const SizedBox(width: 10),
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SizedBox(
+                            height: 45,
+                            child: ElevatedButton.icon(
+                              onPressed: _readBook,
+                              icon: Icon(
+                                Icons.menu_book_rounded,
+                                color: backGroundClr,
+                                size: 18,
+                              ),
+                              label: Text(
+                                'Read Now',
+                                style: GoogleFonts.unbounded(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: backGroundClr,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: blues,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        if (showPrice)
+                          Text(
+                            '${_book.price ?? 0},00 SR',
+                            style: GoogleFonts.unbounded(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: priceGr,
+                            ),
+                          ),
+                        const Spacer(),
+                        Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: SizedBox(
+                            height: 45,
+                            child: ElevatedButton.icon(
+                              onPressed: onPressedAction,
+                              icon: Icon(
+                                buttonIcon,
+                                color: backGroundClr,
+                                size: 18,
+                              ),
+                              label: Text(
+                                buttonText,
+                                style: GoogleFonts.unbounded(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: backGroundClr,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: buttonColor,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
-            const SizedBox(width: 10),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: SizedBox(
-                height: 45,
-                child: ElevatedButton.icon(
-                  onPressed: _readBook,
-                  icon: Icon(
-                    Icons.menu_book_rounded,
-                    color: backGroundClr,
-                    size: 18,
-                  ),
-                  label: Text(
-                    'Read Now',
-                    style: GoogleFonts.unbounded(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: backGroundClr,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: blues,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        )
-            : Row(
-          children: [
-            if (showPrice)
-              Text(
-                '${_book.price ?? 0},00 SR',
-                style: GoogleFonts.unbounded(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: priceGr,
-                ),
-              ),
-            const Spacer(),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: SizedBox(
-                height: 45,
-                child: ElevatedButton.icon(
-                  onPressed: onPressedAction,
-                  icon: Icon(
-                    buttonIcon,
-                    color: backGroundClr,
-                    size: 18,
-                  ),
-                  label: Text(
-                    buttonText,
-                    style: GoogleFonts.unbounded(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: backGroundClr,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: buttonColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
