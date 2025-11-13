@@ -9,7 +9,7 @@ List<BookModel> initialBookData = [
     "The book explores the psychological motives driving human behavior. Through 18 laws, Robert Greene teaches how to read people's true intentions, master emotions, and avoid manipulation. Using historical examples, he helps readers understand themselves and others to gain social intelligence and influence. .",
     rating: "4.7",
     coverUrl:
-    "assets/placeholder.png", // 👈 تم تغيير الرابط إلى صورة محلية لتجنب مشاكل الشبكة
+    "https://i.pinimg.com/736x/16/1e/b7/161eb71d761d671952ab28987d563784.jpg",
     bookurl: "placeholder_3.pdf",
     category: "Psychology",
     language: "English",

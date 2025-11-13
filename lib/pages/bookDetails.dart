@@ -133,7 +133,7 @@ class _BookDetailsState extends State<BookDetails> {
     });
   }
 
-  void _deleteBook() {
+  void _deleteBookLogic() {
     context.read<BooksCubit>().deleteBook(_book.id!);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -145,6 +145,44 @@ class _BookDetailsState extends State<BookDetails> {
       ),
     );
     Navigator.pop(context);
+  }
+
+  void _confirmDelete() {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: backGroundClr,
+          title: Text(
+            "Confirm Deletion",
+            style: GoogleFonts.unbounded(color: pinks),
+          ),
+          content: Text(
+            "Are you sure you want to delete \"${_book.title}\" from the market?",
+            style: GoogleFonts.onest(color: blacks),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(
+                "Cancel",
+                style: GoogleFonts.unbounded(color: blues),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                _deleteBookLogic();
+              },
+              child: Text(
+                "Delete",
+                style: GoogleFonts.unbounded(color: pinks),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   ImageProvider<Object> _getImageProvider(String? coverUrl) {
@@ -221,7 +259,7 @@ class _BookDetailsState extends State<BookDetails> {
             ),
             IconButton(
               icon: const Icon(Icons.delete_forever_rounded, color: pinks, size: 22),
-              onPressed: _deleteBook,
+              onPressed: _confirmDelete,
             ),
             const SizedBox(width: 8),
           ]

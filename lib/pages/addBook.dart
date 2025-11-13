@@ -22,7 +22,6 @@ class AddBook extends StatefulWidget {
 }
 
 class _AddBookState extends State<AddBook> {
-  bool _isOnSale = false;
 
   @override
   void initState() {
@@ -33,7 +32,6 @@ class _AddBookState extends State<AddBook> {
     } else {
       addBookCubit.clearForm();
     }
-    _isOnSale = addBookCubit.isOnSale ?? false;
   }
 
   String? _requiredValidator(String? value, String fieldName) {
@@ -64,11 +62,6 @@ class _AddBookState extends State<AddBook> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final addBookCubit = BlocProvider.of<AddBookCubit>(context);
-
-    // تحديث حالة _isOnSale من الكيوبيت عند البناء
-    if (addBookCubit.isOnSale != _isOnSale) {
-      _isOnSale = addBookCubit.isOnSale ?? false;
-    }
 
     List<Map<String, String>> categoryData = [
       {"key": "Fiction", "label": "Fiction"},
@@ -166,16 +159,18 @@ class _AddBookState extends State<AddBook> {
                               ),
                             ],
                             color: backGroundClr,
+                            // >>> التعديل لعرض غلاف الكتاب الموجود مسبقًا أو الصورة الجديدة <<<
                             image:
                             addBookCubit.coverUrl != null &&
                                 addBookCubit.coverUrl!.isNotEmpty
                                 ? DecorationImage(
-                              image: FileImage(
-                                File(addBookCubit.coverUrl!),
-                              ),
+                              image: addBookCubit.coverUrl!.startsWith('http')
+                                  ? NetworkImage(addBookCubit.coverUrl!) // للروابط الشبكية (الأغلفة المحفوظة)
+                                  : FileImage(File(addBookCubit.coverUrl!)),  // للمسارات المحلية (صورة جديدة)
                               fit: BoxFit.cover,
                             )
                                 : null,
+                            // >>> نهاية التعديل <<<
                           ),
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator())
@@ -451,32 +446,8 @@ class _AddBookState extends State<AddBook> {
                         ),
                         const SizedBox(height: 10),
 
-                        Row(
-                          children: [
-                            Text(
-                              'Is this book On Sale?',
-                              style: GoogleFonts.unbounded(
-                                color: blacks,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            Switch(
-                              value: _isOnSale,
-                              onChanged: isLoading
-                                  ? null
-                                  : (value) {
-                                setState(() {
-                                  _isOnSale = value;
-                                });
-                                addBookCubit.updateOnSaleStatus(value);
-                              },
-                              activeColor: pinks,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
+                        // تم حذف Row الخاص بـ Is this book On Sale
+
                       ],
                     ),
                   ),
@@ -513,7 +484,7 @@ class _AddBookState extends State<AddBook> {
                         }
 
                         formKey.currentState!.save();
-                        addBookCubit.updateOnSaleStatus(_isOnSale);
+                        addBookCubit.updateOnSaleStatus(true);
 
                         addBookCubit.saveBook(existingBook: widget.existingBook);
                       }
