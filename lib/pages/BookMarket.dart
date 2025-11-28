@@ -56,7 +56,7 @@ class BookMarket extends StatelessWidget {
         bool isBasketNotEmpty = false;
         if (state is BooksSuccess) {
           isBasketNotEmpty = state.allBooks.any(
-            (book) => book.isInBasket == true,
+                (book) => book.isInBasket == true,
           );
         }
         final IconData basketIcon = isBasketNotEmpty
@@ -117,7 +117,7 @@ class BookMarket extends StatelessWidget {
                         final index = entry.key;
                         final category = entry.value;
                         final Color borderClr =
-                            categoryColors[index % categoryColors.length];
+                        categoryColors[index % categoryColors.length];
                         return Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: Categorysetting(
@@ -133,42 +133,42 @@ class BookMarket extends StatelessWidget {
                   const SizedBox(height: 8),
                   (state is BooksSuccess && displayedBooks.isEmpty)
                       ? Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(50.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "No books found in this category.",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.onest(
-                                    fontSize: 14,
-                                    color: blacks,
-                                  ),
-                                ),
-                              ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(50.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "No books found in this category.",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.onest(
+                              fontSize: 14,
+                              color: blacks,
                             ),
                           ),
-                        )
+                        ],
+                      ),
+                    ),
+                  )
                       : Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  childAspectRatio: 0.53,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                ),
-                            itemCount: displayedBooks.length,
-                            itemBuilder: (context, index) {
-                              final book = displayedBooks[index];
-                              return bookItemMarket(book: book);
-                            },
-                          ),
-                        ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 0.53,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: displayedBooks.length,
+                      itemBuilder: (context, index) {
+                        final book = displayedBooks[index];
+                        return bookItemMarket(book: book);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

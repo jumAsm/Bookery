@@ -7,6 +7,7 @@ const String kBookBox = 'books_for_sale_box';
 
 class BooksCubit extends Cubit<BooksState> {
   String currentCategory = 'All';
+  String currentSearchQuery = '';
 
   BooksCubit() : super(BooksInitial()) {
     fetchAllBooks();
@@ -29,6 +30,13 @@ class BooksCubit extends Cubit<BooksState> {
       emit(BooksSuccess((state as BooksSuccess).allBooks));
     } else {
       emit(BooksInitial());
+    }
+  }
+
+  void setSearchQuery(String query) {
+    currentSearchQuery = query.toLowerCase().trim();
+    if (state is BooksSuccess) {
+      emit(BooksSuccess((state as BooksSuccess).allBooks));
     }
   }
 

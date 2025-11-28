@@ -9,8 +9,10 @@ import 'BasketPage.dart';
 import 'addBook.dart';
 import 'ProfilePage.dart';
 import '../cubits/books_cubit.dart';
+import '../models/BookModel.dart';
 import 'BookMarket.dart';
 import '../widgets/AnimatedBar.dart';
+import 'bookDetails.dart';
 
 class Homepage extends StatefulWidget {
   final int initialIndex;
@@ -29,11 +31,19 @@ class _HomepageState extends State<Homepage> {
     IconModel(id: 3, icon: Icons.person_outline),
   ];
 
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     BlocProvider.of<BooksCubit>(context).fetchAllBooks();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _onTabTapped(int index) {
@@ -68,11 +78,24 @@ class _HomepageState extends State<Homepage> {
       buildWhen: (previous, current) => true,
       builder: (context, state) {
         bool isBasketNotEmpty = false;
+        List<BookModel> searchResults = [];
+        final bool isSearching = booksCubit.currentSearchQuery.isNotEmpty;
+
         if (state is BooksSuccess) {
           isBasketNotEmpty = state.allBooks.any(
                 (book) => book.isInBasket == true,
           );
+
+          if (isSearching) {
+            final query = booksCubit.currentSearchQuery;
+            searchResults = state.allBooks.where((book) {
+              return (book.title?.toLowerCase().contains(query) ?? false) ||
+                  (book.author?.toLowerCase().contains(query) ?? false) ||
+                  (book.category?.toLowerCase().contains(query) ?? false);
+            }).toList();
+          }
         }
+
         final IconData basketIcon = isBasketNotEmpty
             ? Icons.shopping_bag_rounded
             : Icons.shopping_bag_outlined;
@@ -117,6 +140,10 @@ class _HomepageState extends State<Homepage> {
                       ),
                       const SizedBox(height: 8),
                       TextField(
+                        controller: _searchController,
+                        onChanged: (value) {
+                          booksCubit.setSearchQuery(value);
+                        },
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 10,
@@ -141,135 +168,205 @@ class _HomepageState extends State<Homepage> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(color: blacks, width: 2),
                           ),
+                          suffixIcon: isSearching
+                              ? IconButton(
+                            icon: const Icon(Icons.clear, size: 18),
+                            onPressed: () {
+                              _searchController.clear();
+                              booksCubit.setSearchQuery('');
+                            },
+                          )
+                              : null,
                         ),
                       ),
                       const SizedBox(height: 20),
 
-                      Text(
-                        'Geners',
-                        style: GoogleFonts.unbounded(
-                          fontSize: 14,
-                          color: blacks,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                    ],
-                  ),
-                ),
-                Container(
-                  color: backGroundClr,
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Row(
-                        children: [
-                          Categorysetting(
-                            label: 'Fiction',
-                            borderClr: pinks,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                          const SizedBox(width: 8),
-                          Categorysetting(
-                            label: 'Literature',
-                            borderClr: blues,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                          const SizedBox(width: 8),
-                          Categorysetting(
-                            label: 'Psychology',
-                            borderClr: yellows,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                          const SizedBox(width: 8),
-                          Categorysetting(
-                            label: 'Art',
-                            borderClr: greens,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                          const SizedBox(width: 8),
-                          Categorysetting(
-                            label: 'Poetry',
-                            borderClr: pinks,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                          const SizedBox(width: 8),
-                          Categorysetting(
-                            label: 'Biography',
-                            borderClr: blues,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                          const SizedBox(width: 8),
-                          Categorysetting(
-                            label: 'History',
-                            borderClr: yellows,
-                            selected: false,
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: InkWell(
-                    onTap: () {
-                      booksCubit.selectCategory('All');
-                      setState(() {
-                        _currentIndex = 2;
-                      });
-                    },
-                    child: Row(
-                      children: [
+                      if (!isSearching) ...[
                         Text(
-                          'New on the Market',
+                          'Geners',
                           style: GoogleFonts.unbounded(
                             fontSize: 14,
                             color: blacks,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const Spacer(),
-                        Icon(
-                          Icons.keyboard_arrow_right,
-                          size: 20,
-                          color: blacks,
-                        ),
+                        const SizedBox(height: 4),
                       ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const recentAddedList(),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Text(
-                        'You May Like',
-                        style: GoogleFonts.unbounded(
-                          fontSize: 14,
-                          color: blacks,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const Spacer(),
                     ],
                   ),
                 ),
+
+                if (!isSearching)
+                  Container(
+                    color: backGroundClr,
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Row(
+                          children: [
+                            Categorysetting(
+                              label: 'Fiction',
+                              borderClr: pinks,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Categorysetting(
+                              label: 'Literature',
+                              borderClr: blues,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Categorysetting(
+                              label: 'Psychology',
+                              borderClr: yellows,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Categorysetting(
+                              label: 'Art',
+                              borderClr: greens,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Categorysetting(
+                              label: 'Poetry',
+                              borderClr: pinks,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Categorysetting(
+                              label: 'Biography',
+                              borderClr: blues,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 8),
+                            Categorysetting(
+                              label: 'History',
+                              borderClr: yellows,
+                              selected: false,
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 2),
-                const StackedRecommendations(),
+
+                if (isSearching)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Search Results for "${booksCubit.currentSearchQuery}"',
+                          style: GoogleFonts.unbounded(
+                            fontSize: 14,
+                            color: blacks,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        if (searchResults.isEmpty)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(50.0),
+                              child: Text(
+                                "No books found matching your search.",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.onest(
+                                  fontSize: 14,
+                                  color: blacks,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: searchResults.length,
+                            itemBuilder: (context, index) {
+                              final book = searchResults[index];
+                              return ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookDetails(book: book),
+                                    ),
+                                  );
+                                },
+                                title: Text(book.title ?? 'No Title'),
+                                subtitle: Text(book.author ?? 'No Author'),
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  )
+                else
+                  ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: InkWell(
+                        onTap: () {
+                          booksCubit.selectCategory('All');
+                          setState(() {
+                            _currentIndex = 2;
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              'New on the Market',
+                              style: GoogleFonts.unbounded(
+                                fontSize: 14,
+                                color: blacks,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(
+                              Icons.keyboard_arrow_right,
+                              size: 20,
+                              color: blacks,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const recentAddedList(),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Text(
+                            'You May Like',
+                            style: GoogleFonts.unbounded(
+                              fontSize: 14,
+                              color: blacks,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const StackedRecommendations(),
+                  ],
               ],
             ),
           ),
