@@ -3,45 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:bookery/constants/colors.dart';
 import '../models/BookModel.dart';
 import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubits/books_cubit.dart';
+import '../pages/bookDetails.dart';
 
 const double overlapHeight = 40.0;
 const double cardHeight = 145.0;
-
-final List<BookModel> fixedRecommendedBooks = [
-  BookModel(
-    id: "14",
-    title: "The Song of Achilles",
-    author: "Madeline Miller",
-    rating: "4.4",
-    coverUrl:
-        "https://i.pinimg.com/736x/35/0b/29/350b29b24856ef5d4b3d1b4e01dcf2bf.jpg",
-    language: "English",
-    pages: 408,
-    price: 35,
-  ),
-  BookModel(
-    id: "4",
-    title: "كافكا على الشاطئ",
-    author: "هاروكي موراكامي",
-    rating: "4.6",
-    coverUrl:
-        "https://i.pinimg.com/736x/32/30/47/32304772b1a4c68be65f05e71b95b9ce.jpg",
-    language: "Arabic",
-    pages: 615,
-    price: 51,
-  ),
-  BookModel(
-    id: "7",
-    title: "The Picture of Dorian Gray",
-    author: "Oscar Wilde",
-    rating: "4.6",
-    coverUrl:
-        "https://i.pinimg.com/736x/47/9b/9f/479b9fb3af662656dcec039de3c46486.jpg",
-    language: "English",
-    pages: 254,
-    price: 52,
-  ),
-];
 
 class StackedRecommendations extends StatefulWidget {
   const StackedRecommendations({super.key});
@@ -51,7 +18,7 @@ class StackedRecommendations extends StatefulWidget {
 }
 
 class _StackedRecommendationsState extends State<StackedRecommendations> {
-  int? _tappedIndex;
+  String? _tappedBookId;
 
   Widget _buildDetailsColumn(BookModel book, Color textColor) {
     return Column(
@@ -106,127 +73,213 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
     }
   }
 
+  List<BookModel> _getRecommendations(List<BookModel> allBooks) {
+    final Map<String, int> ownedCategoryCounts = {};
+    for (final book in allBooks) {
+      if (book.isOwned == true && book.category != null) {
+        ownedCategoryCounts.update(
+          book.category!,
+              (count) => count + 1,
+          ifAbsent: () => 1,
+        );
+      }
+    }
+
+    String? favoriteCategory;
+    int maxCount = -1;
+
+    for (final entry in ownedCategoryCounts.entries) {
+      if (entry.value > maxCount) {
+        maxCount = entry.value;
+        favoriteCategory = entry.key;
+      }
+    }
+
+    List<BookModel> recommendations = [];
+
+    if (favoriteCategory != null) {
+      final List<BookModel> preferredRecommendations = allBooks
+          .where((book) =>
+      book.category == favoriteCategory &&
+          (book.isOwned == false) &&
+          (book.isOnSale == false))
+          .toList();
+      preferredRecommendations.sort((a, b) {
+        double ratingA = double.tryParse(a.rating ?? '0.0') ?? 0.0;
+        double ratingB = double.tryParse(b.rating ?? '0.0') ?? 0.0;
+        return ratingB.compareTo(ratingA);
+      });
+
+      recommendations.addAll(preferredRecommendations.take(3));
+    }
+
+    if (recommendations.length < 3) {
+      final List<BookModel> fallbackBooks = allBooks
+          .where((book) =>
+      (book.isOwned == false) &&
+          (book.isOnSale == false) &&
+          (book.category != favoriteCategory))
+          .toList();
+
+      fallbackBooks.sort((a, b) {
+        double ratingA = double.tryParse(a.rating ?? '0.0') ?? 0.0;
+        double ratingB = double.tryParse(b.rating ?? '0.0') ?? 0.0;
+        return ratingB.compareTo(ratingA);
+      });
+
+      final int neededCount = 3 - recommendations.length;
+      recommendations.addAll(fallbackBooks.take(neededCount));
+    }
+    return recommendations.take(3).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Color> cardColors = [blues, yellows, greens];
 
-    final List<BookModel> displayBooks = fixedRecommendedBooks;
+    return BlocBuilder<BooksCubit, BooksState>(
+      builder: (context, state) {
+        if (state is BooksLoading) {
+          return const Center(child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text("Loading recommendations..."),
+          ));
+        }
 
-    if (displayBooks.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            "No recommended books available.",
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
-    }
+        if (state is! BooksSuccess) {
+          return const SizedBox.shrink();
+        }
 
-    final double totalCards = displayBooks.length.toDouble();
-    final double currentStackHeight =
-        cardHeight + ((totalCards - 1) * overlapHeight);
-    final List<MapEntry<int, BookModel>> orderedEntries = displayBooks
-        .asMap()
-        .entries
-        .toList()
-        .reversed
-        .toList();
-    if (_tappedIndex != null) {
-      final entryToMove = orderedEntries.firstWhere(
-        (entry) => entry.key == _tappedIndex,
-      );
+        final List<BookModel> recommendedBooks = _getRecommendations(state.allBooks);
+        final List<BookModel> displayBooks = recommendedBooks;
 
-      orderedEntries.removeWhere((entry) => entry.key == _tappedIndex);
-      orderedEntries.add(entryToMove);
-    }
+        if (displayBooks.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                "No recommended books available.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: SizedBox(
-        height: currentStackHeight,
-        child: Stack(
-          children: [
-            ...orderedEntries.map((entry) {
-              int index = entry.key;
-              BookModel book = entry.value;
-              final bool isTapped = _tappedIndex == index;
-              final double scaleFactor = isTapped ? 1.05 : 1.0;
-              final Color cardColor = cardColors[index % cardColors.length];
+        final double totalCards = displayBooks.length.toDouble();
+        final double currentStackHeight =
+            cardHeight + ((totalCards - 1) * overlapHeight);
 
-              final Color textColor = cardColor == yellows
-                  ? blacks
-                  : backGroundClr;
+        final List<MapEntry<int, BookModel>> orderedEntries = displayBooks
+            .asMap()
+            .entries
+            .toList()
+            .reversed
+            .toList();
+        if (_tappedBookId != null) {
+          final int tappedIndex = displayBooks.indexWhere((book) => book.id == _tappedBookId);
+          if (tappedIndex != -1) {
+            final entryToMoveIndexInReversed = orderedEntries.indexWhere((entry) => entry.key == tappedIndex);
+            if(entryToMoveIndexInReversed != -1) {
+              final entryToMove = orderedEntries.removeAt(entryToMoveIndexInReversed);
+              orderedEntries.add(entryToMove);
+            }
+          }
+        }
 
-              final FontWeight titleFontWeight = book.language == 'Arabic'
-                  ? FontWeight.bold
-                  : FontWeight.w500;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: SizedBox(
+            height: currentStackHeight,
+            child: Stack(
+              children: [
+                ...orderedEntries.map((entry) {
+                  int index = entry.key;
+                  BookModel book = entry.value;
+                  final bool isTapped = book.id == _tappedBookId;
 
-              final double topPosition =
-                  (totalCards - 1 - index) * overlapHeight;
-              const double currentCardHeight = cardHeight;
+                  final double topPosition = (totalCards - 1 - index) * overlapHeight;
+                  final double scaleFactor = isTapped ? 1.05 : 1.0;
+                  final Color cardColor = cardColors[index % cardColors.length];
 
-              return Positioned(
-                top: topPosition,
-                left: 0,
-                right: 0,
-                child: Transform.scale(
-                  scale: scaleFactor,
-                  child: AnimatedContainer(
-                    key: ValueKey(index),
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    height: currentCardHeight,
-                    decoration: BoxDecoration(
-                      color: cardColor,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          blurRadius: isTapped ? 10 : 3,
-                          offset: isTapped
-                              ? const Offset(0, 5)
-                              : const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          _tappedIndex = isTapped ? null : index;
-                        });
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 10,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              book.title ?? 'No Title',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.unbounded(
-                                fontSize: book.language == 'Arabic' ? 16 : 14,
-                                fontWeight: titleFontWeight,
-                                color: textColor,
+                  final Color textColor = cardColor == yellows
+                      ? blacks
+                      : backGroundClr;
+
+                  final FontWeight titleFontWeight = book.language == 'Arabic'
+                      ? FontWeight.bold
+                      : FontWeight.w500;
+
+                  const double currentCardHeight = cardHeight;
+
+                  return Positioned(
+                    top: topPosition,
+                    left: 0,
+                    right: 0,
+                    child: Transform.scale(
+                      scale: scaleFactor,
+                      child: GestureDetector(
+                        onDoubleTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BookDetails(book: book),
+                            ),
+                          );
+                        },
+                        child: AnimatedContainer(
+                          key: ValueKey(book.id),
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          height: currentCardHeight,
+                          decoration: BoxDecoration(
+                            color: cardColor,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                blurRadius: isTapped ? 10 : 3,
+                                offset: isTapped
+                                    ? const Offset(0, 5)
+                                    : const Offset(0, 1),
                               ),
-                            ),
-                            SizedBox(
-                              height: (book.language == 'Arabic') ? 4 : 8,
-                            ),
-                            AnimatedOpacity(
-                              opacity: isTapped ? 1.0 : 0.0,
-                              duration: const Duration(milliseconds: 300),
-                              child: isTapped
-                                  ? SizedBox(
+                            ],
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _tappedBookId = isTapped ? null : book.id;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 10,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    book.title ?? 'No Title',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.unbounded(
+                                      fontSize: book.language == 'Arabic' ? 16 : 14,
+                                      fontWeight: titleFontWeight,
+                                      color: textColor,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: (book.language == 'Arabic') ? 4 : 8,
+                                  ),
+                                  AnimatedOpacity(
+                                    opacity: isTapped ? 1.0 : 0.0,
+                                    duration: const Duration(milliseconds: 300),
+                                    child: isTapped
+                                        ? SizedBox(
                                       height: 90,
                                       child: Row(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(
@@ -244,14 +297,14 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                                                 ),
                                               ),
                                               child:
-                                                  book.coverUrl == null ||
-                                                      book.coverUrl!.isEmpty
+                                              book.coverUrl == null ||
+                                                  book.coverUrl!.isEmpty
                                                   ? Center(
-                                                      child: Icon(
-                                                        Icons.book,
-                                                        color: textColor,
-                                                      ),
-                                                    )
+                                                child: Icon(
+                                                  Icons.book,
+                                                  color: textColor,
+                                                ),
+                                              )
                                                   : null,
                                             ),
                                           ),
@@ -267,28 +320,41 @@ class _StackedRecommendationsState extends State<StackedRecommendations> {
                                             padding: const EdgeInsets.only(
                                               top: 70,
                                             ),
-                                            child: Icon(
-                                              Icons.more_horiz_outlined,
-                                              color: textColor,
-                                              size: 18,
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => BookDetails(book: book),
+                                                  ),
+                                                );
+                                              },
+                                              child: Icon(
+                                                Icons.more_horiz_outlined,
+                                                color: textColor,
+                                                size: 18,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
                                     )
-                                  : const SizedBox.shrink(),
+                                        : const SizedBox.shrink(),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ],
-        ),
-      ),
+                  );
+                }).toList(),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

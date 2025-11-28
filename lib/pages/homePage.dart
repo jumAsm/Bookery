@@ -70,7 +70,7 @@ class _HomepageState extends State<Homepage> {
         bool isBasketNotEmpty = false;
         if (state is BooksSuccess) {
           isBasketNotEmpty = state.allBooks.any(
-            (book) => book.isInBasket == true,
+                (book) => book.isInBasket == true,
           );
         }
         final IconData basketIcon = isBasketNotEmpty
@@ -282,7 +282,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     final booksCubit = BlocProvider.of<BooksCubit>(context);
     final bool shouldShowBar =
-        (_currentIndex == 0 || _currentIndex == 2 || _currentIndex == 3);
+    (_currentIndex == 0 || _currentIndex == 2 || _currentIndex == 3);
 
     return Scaffold(
       backgroundColor: backGroundClr,
@@ -291,10 +291,10 @@ class _HomepageState extends State<Homepage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: shouldShowBar
           ? AnimatedBar(
-              currentIcon: _currentIndex,
-              icons: _navIcons,
-              onTabTap: _onTabTapped,
-            )
+        currentIcon: _currentIndex,
+        icons: _navIcons,
+        onTabTap: _onTabTapped,
+      )
           : null,
     );
   }
