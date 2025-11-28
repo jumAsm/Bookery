@@ -183,7 +183,7 @@ class _HomepageState extends State<Homepage> {
 
                       if (!isSearching) ...[
                         Text(
-                          'Geners',
+                          'Genres',
                           style: GoogleFonts.unbounded(
                             fontSize: 14,
                             color: blacks,
@@ -210,49 +210,84 @@ class _HomepageState extends State<Homepage> {
                               label: 'Fiction',
                               borderClr: pinks,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('Fiction');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                             const SizedBox(width: 8),
                             Categorysetting(
                               label: 'Literature',
                               borderClr: blues,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('Literature');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                             const SizedBox(width: 8),
                             Categorysetting(
                               label: 'Psychology',
                               borderClr: yellows,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('Psychology');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                             const SizedBox(width: 8),
                             Categorysetting(
                               label: 'Art',
                               borderClr: greens,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('Art');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                             const SizedBox(width: 8),
                             Categorysetting(
                               label: 'Poetry',
                               borderClr: pinks,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('Poetry');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                             const SizedBox(width: 8),
                             Categorysetting(
                               label: 'Biography',
                               borderClr: blues,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('Biography');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                             const SizedBox(width: 8),
                             Categorysetting(
                               label: 'History',
                               borderClr: yellows,
                               selected: false,
-                              onTap: () {},
+                              onTap: () {
+                                booksCubit.selectCategory('History');
+                                setState(() {
+                                  _currentIndex = 2;
+                                });
+                              },
                             ),
                           ],
                         ),
