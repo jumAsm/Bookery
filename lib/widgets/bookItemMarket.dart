@@ -50,7 +50,7 @@ class bookItemMarket extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              height: 175,
+              height: 145,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),

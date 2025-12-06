@@ -8,12 +8,16 @@ class MultiLineTextField extends StatelessWidget {
   final void Function(String? value)? onSaved;
   final String? initialValue;
 
+  final String? Function(String? value)? validator;
+
   const MultiLineTextField({
     super.key,
     required this.hintText,
     required this.icon,
     this.onSaved,
     this.initialValue,
+
+    this.validator,
   });
 
   @override
@@ -21,6 +25,9 @@ class MultiLineTextField extends StatelessWidget {
     return TextFormField(
       initialValue: initialValue,
       onSaved: onSaved,
+
+      validator: validator,
+
       style: GoogleFonts.onest(
         color: blues,
         fontSize: 12,

@@ -40,16 +40,6 @@ class _AddBookState extends State<AddBook> {
     return null;
   }
 
-  String? _optionalNumericValidator(String? value, String fieldName) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-    if (int.tryParse(value) == null) {
-      return 'Please enter a valid number for $fieldName';
-    }
-    return null;
-  }
-
   String? _dropdownValidator(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
       return 'Please select $fieldName';
@@ -139,19 +129,18 @@ class _AddBookState extends State<AddBook> {
                     Column(
                       children: [
                         const SizedBox(height: 30),
-
                         InkWell(
                           onTap: isLoading
                               ? null
                               : () async {
-                                  final picker = ImagePicker();
-                                  final XFile? image = await picker.pickImage(
-                                    source: ImageSource.gallery,
-                                  );
-                                  if (image != null) {
-                                    addBookCubit.updateCoverUrl(image.path);
-                                  }
-                                },
+                            final picker = ImagePicker();
+                            final XFile? image = await picker.pickImage(
+                              source: ImageSource.gallery,
+                            );
+                            if (image != null) {
+                              addBookCubit.updateCoverUrl(image.path);
+                            }
+                          },
                           child: Container(
                             height: 190,
                             width: 140,
@@ -168,57 +157,55 @@ class _AddBookState extends State<AddBook> {
                               ],
                               color: backGroundClr,
                               image:
-                                  addBookCubit.coverUrl != null &&
-                                      addBookCubit.coverUrl!.isNotEmpty
+                              addBookCubit.coverUrl != null &&
+                                  addBookCubit.coverUrl!.isNotEmpty
                                   ? DecorationImage(
-                                      image:
-                                          addBookCubit.coverUrl!.startsWith(
-                                            'http',
-                                          )
-                                          ? NetworkImage(addBookCubit.coverUrl!)
-                                          : FileImage(
-                                              File(addBookCubit.coverUrl!),
-                                            ),
-                                      fit: BoxFit.cover,
-                                    )
+                                image:
+                                addBookCubit.coverUrl!.startsWith(
+                                  'http',
+                                )
+                                    ? NetworkImage(addBookCubit.coverUrl!)
+                                    : FileImage(
+                                  File(addBookCubit.coverUrl!),
+                                ) as ImageProvider<Object>,
+                                fit: BoxFit.cover,
+                              )
                                   : null,
                             ),
                             child: isLoading
                                 ? const Center(
-                                    child: CircularProgressIndicator(),
-                                  )
+                              child: CircularProgressIndicator(),
+                            )
                                 : addBookCubit.coverUrl == null ||
-                                      addBookCubit.coverUrl!.isEmpty
+                                addBookCubit.coverUrl!.isEmpty
                                 ? const Center(
-                                    child: Icon(
-                                      Icons.add_photo_alternate,
-                                      size: 32,
-                                      color: blues,
-                                    ),
-                                  )
+                              child: Icon(
+                                Icons.add_photo_alternate,
+                                size: 32,
+                                color: blues,
+                              ),
+                            )
                                 : null,
                           ),
                         ),
-
                         const SizedBox(height: 18),
-
                         Column(
                           children: [
                             InkWell(
                               onTap: isLoading
                                   ? null
                                   : () async {
-                                      final result = await FilePicker.platform
-                                          .pickFiles(
-                                            type: FileType.custom,
-                                            allowedExtensions: ['pdf'],
-                                          );
-                                      if (result != null) {
-                                        addBookCubit.updateBookUrl(
-                                          result.files.single.path,
-                                        );
-                                      }
-                                    },
+                                final result = await FilePicker.platform
+                                    .pickFiles(
+                                  type: FileType.custom,
+                                  allowedExtensions: ['pdf'],
+                                );
+                                if (result != null) {
+                                  addBookCubit.updateBookUrl(
+                                    result.files.single.path,
+                                  );
+                                }
+                              },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 10,
@@ -255,7 +242,6 @@ class _AddBookState extends State<AddBook> {
                               ),
                             ),
                             const SizedBox(height: 10),
-
                             Visibility(
                               visible: addBookCubit.bookUrl != null,
                               child: InkWell(
@@ -274,7 +260,6 @@ class _AddBookState extends State<AddBook> {
                       ],
                     ),
                     const SizedBox(height: 10),
-
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 16,
@@ -305,8 +290,10 @@ class _AddBookState extends State<AddBook> {
                             initialValue: addBookCubit.description,
                             hintText: "Book Description",
                             onSaved: (value) =>
-                                addBookCubit.description = value,
+                            addBookCubit.description = value,
                             icon: Icons.short_text_sharp,
+                            validator: (value) =>
+                                _requiredValidator(value, "Book Description"),
                           ),
                           const SizedBox(height: 10),
                           TextFormFieldSet(
@@ -327,9 +314,18 @@ class _AddBookState extends State<AddBook> {
                                   isNumber: true,
                                   icon: Icons.menu_book_rounded,
                                   onSaved: (value) =>
-                                      addBookCubit.pages = value,
-                                  validator: (value) =>
-                                      _optionalNumericValidator(value, "Pages"),
+                                  addBookCubit.pages = value,
+                                  validator: (value) {
+                                    final requiredError =
+                                    _requiredValidator(value, "Pages");
+                                    if (requiredError != null)
+                                      return requiredError;
+
+                                    if (value != null && int.tryParse(value) == null) {
+                                      return 'Please enter a valid number for Pages';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -340,7 +336,7 @@ class _AddBookState extends State<AddBook> {
                                   isNumber: true,
                                   icon: Icons.payments_sharp,
                                   onSaved: (value) =>
-                                      addBookCubit.price = value,
+                                  addBookCubit.price = value,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Please enter the Price (SAR)';
@@ -355,7 +351,6 @@ class _AddBookState extends State<AddBook> {
                             ],
                           ),
                           const SizedBox(height: 10),
-
                           DropdownButtonFormField<String>(
                             value: addBookCubit.category,
                             hint: Text(
@@ -386,24 +381,23 @@ class _AddBookState extends State<AddBook> {
                             items: categoryData
                                 .map(
                                   (e) => DropdownMenuItem<String>(
-                                    value: e["key"],
-                                    child: Text(
-                                      e["label"]!,
-                                      style: GoogleFonts.onest(
-                                        color: blacks,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                value: e["key"],
+                                child: Text(
+                                  e["label"]!,
+                                  style: GoogleFonts.onest(
+                                    color: blacks,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                )
+                                ),
+                              ),
+                            )
                                 .toList(),
                             onChanged: (value) {
                               addBookCubit.category = value;
                             },
                           ),
                           const SizedBox(height: 10),
-
                           DropdownButtonFormField<String>(
                             value: addBookCubit.language,
                             hint: Text(
@@ -434,17 +428,17 @@ class _AddBookState extends State<AddBook> {
                             items: languageData
                                 .map(
                                   (e) => DropdownMenuItem<String>(
-                                    value: e["label"],
-                                    child: Text(
-                                      e["label"]!,
-                                      style: GoogleFonts.onest(
-                                        color: blacks,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                value: e["label"],
+                                child: Text(
+                                  e["label"]!,
+                                  style: GoogleFonts.onest(
+                                    color: blacks,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                )
+                                ),
+                              ),
+                            )
                                 .toList(),
                             onChanged: (value) {
                               addBookCubit.language = value;
@@ -459,7 +453,6 @@ class _AddBookState extends State<AddBook> {
               ),
             ),
           ),
-
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
             child: Row(
@@ -472,31 +465,29 @@ class _AddBookState extends State<AddBook> {
                     ontap: isLoading
                         ? () {}
                         : () {
-                            if (formKey.currentState!.validate()) {
-                              if (addBookCubit.coverUrl == null ||
-                                  addBookCubit.bookUrl == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "Please ensure both the cover image and book file are uploaded.",
-                                      style: GoogleFonts.onest(),
-                                    ),
-                                    duration: const Duration(
-                                      milliseconds: 1500,
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              formKey.currentState!.save();
-                              addBookCubit.updateOnSaleStatus(true);
-
-                              addBookCubit.saveBook(
-                                existingBook: widget.existingBook,
-                              );
-                            }
-                          },
+                      if (formKey.currentState!.validate()) {
+                        if (addBookCubit.coverUrl == null ||
+                            addBookCubit.bookUrl == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Please ensure both the cover image and book file are uploaded.",
+                                style: GoogleFonts.onest(),
+                              ),
+                              duration: const Duration(
+                                milliseconds: 1500,
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        formKey.currentState!.save();
+                        addBookCubit.updateOnSaleStatus(true);
+                        addBookCubit.saveBook(
+                          existingBook: widget.existingBook,
+                        );
+                      }
+                    },
                   ),
                 ),
               ],
