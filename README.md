@@ -23,7 +23,7 @@ With Bookery, users can:
 
 ### UI Preview
 
-![Bookery App Preview](Bookery_poster.jpg)
+![Bookery Poster](Bookery_poster.png)
 
 ---
 
