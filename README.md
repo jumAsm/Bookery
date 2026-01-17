@@ -1,6 +1,6 @@
 # <img src="bookery_icon.png" width="40" height="40"> Bookery Bookery – Comprehensive Book Marketplace
 
-**Bookery** is a robust Flutter-based mobile application developed as a semester project for the **Software Process Models (SW315)** course at the **University of Jeddah**. It serves as an all-in-one platform for book enthusiasts to manage personal collections and engage in a community-driven marketplace.
+**Bookery** is a robust Flutter-based mobile application developed as a semester project for the **Software Process Models** course at the **University of Jeddah**. It serves as an all-in-one platform for book enthusiasts to manage personal collections and engage in a community-driven marketplace.
 
 ---
 
@@ -38,16 +38,6 @@ The project was executed following **Agile methodology**, divided into four stra
 
 ---
 
-### Tech Stack
-
-- **Flutter** – for cross-platform UI development
-- **Firebase** – for authentication, database, and marketplace hosting
-- **External Book APIs** – for automated data fetching
-- **Agile/Scrum** – for project management and delivery
-
----
-
 ### Created by
 
 **jumAsm** November 2025  
-*Software Engineering Student | University of Jeddah*
