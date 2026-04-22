@@ -33,7 +33,7 @@ The project was executed following **Agile methodology**, divided into four stra
 
 * **Sprint 0:** Requirements Engineering (Functional/Non-Functional) & Architectural Modeling.
 * **Sprint 1:** Core Marketplace features (Selling/Buying logic).
-* **Sprint 2:** Personal Library management & Favorites system.
+* **Sprint 2:** Personal library management & Favorites system.
 * **Sprint 3:** Search functionality & Recommendation engine.
 
 ---
