@@ -1,4 +1,4 @@
-# <img src="bookery_icon.png" width="40" height="40"> Bookery Bookery – Comprehensive Book Marketplace
+# <img src="bookery_icon.png" width="40" height="40"> Bookery – Comprehensive Book Marketplace
 
 **Bookery** is a robust Flutter-based mobile application developed as a semester project for the **Software Process Models** course at the **University of Jeddah**. It serves as an all-in-one platform for book enthusiasts to manage personal collections and engage in a community-driven marketplace.
 
